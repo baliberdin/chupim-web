@@ -1,0 +1,6 @@
+extends layout
+
+block content
+  .error-box
+    h1= `${message} ${error.status}`
+    pre #{error.stack}

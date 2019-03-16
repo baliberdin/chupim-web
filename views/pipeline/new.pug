@@ -1,0 +1,128 @@
+extends ../layout
+
+block scripts
+  script(src='/javascripts/cytoscape.min.js')
+  script(src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,fetch")
+  script(src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js")
+  script(src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.5.0/cytoscape-dagre.js")
+  script(src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cose-bilkent/1.6.5/cytoscape-cose-bilkent.js")
+  
+  script(src='/javascripts/pipeline-flow.js')
+
+block navigator
+  include navigator
+
+block content
+  if component
+    input#edit-component(type='hidden' value=component.elements)
+  #pipeline-save-modal.modal(tabindex="-1" role="dialog")
+    .modal-dialog(role="document")
+      .modal-content
+        .modal-header
+          h5.modal-title Save New Pipeline
+          button.close(type="button" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true") ×
+        .modal-body
+          form#pipeline-save-form.form.needs-validation(name="newPipelineForm" action='/api/' method='post'  novalidate)
+            .form-group
+              input.form-control(type='hidden' name='stages' required)
+              input.form-control(type='hidden' name='enabled' required value=`${component != undefined? component.enabled: false}`)
+              .invalid-feedback The pipeline has no stage
+            .form-group
+              input.form-control(type='hidden' name='elements' required)
+              .invalid-feedback Something went wrong, try later.
+            .form-group
+              label Resource Name
+              input#pipeline-resource-name.form-control(placeholder='Products from store' name='name' value=component != undefined ? component.name : "" required)
+              .invalid-feedback This field could not be empty
+            .form-group
+              label API Path: /api/{path}
+              input#pipeline-api-path.form-control(placeholder='v1/example' name='path' value=component != undefined ? component.id : "" required)
+              .invalid-feedback This field could not be empty
+            .form-group
+              label HTTP Methods
+              div
+                .form-check.form-check-inline
+                  if component && component.methods.includes('GET')
+                    input.form-check-input(type='checkbox' name='methods' value='GET' checked)
+                  else
+                    input.form-check-input(type='checkbox' name='methods' value='GET')
+                  label.form-check-label GET
+                .form-check.form-check-inline
+                  if component && component.methods.includes('POST')
+                    input.form-check-input(type='checkbox' name='methods' value='POST' checked)
+                  else
+                    input.form-check-input(type='checkbox' name='methods' value='POST')
+                  label.form-check-label POST
+                .form-check.form-check-inline
+                  if component && component.methods.includes('DELETE')
+                    input.form-check-input(type='checkbox' name='methods' value='DELETE' checked)
+                  else
+                    input.form-check-input(type='checkbox' name='methods' value='DELETE')
+                  label.form-check-label DELETE
+                .form-check.form-check-inline
+                  if component && component.methods.includes('PUT')
+                    input.form-check-input(type='checkbox' name='methods' value='PUT' checked)
+                  else
+                    input.form-check-input(type='checkbox' name='methods' value='PUT')
+                  label.form-check-label PUT
+                .form-check.form-check-inline
+                  if component && component.methods.includes('HEAD')
+                    input.form-check-input(type='checkbox' name='methods' value='HEAD' checked)
+                  else
+                    input.form-check-input(type='checkbox' name='methods' value='HEAD')
+                  label.form-check-label HEAD
+                .form-check.form-check-inline
+                  if component && component.methods.includes('OPTIONS')
+                    input.form-check-input(type='checkbox' name='methods' value='OPTIONS' checked)
+                  else
+                    input.form-check-input(type='checkbox' name='methods' value='OPTIONS')
+                  label.form-check-label OPTIONS
+                
+
+              
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+          button.btn.btn-primary(type="submit" form="pipeline-save-form") Save changes
+
+
+  .row.full-height
+    .col-2.full-height.right-shadow.scrolly
+      br
+      #left-menu.full-height
+        h2 How to Use
+        ul.help
+          li Click on item to add to graph
+          li Delete: [Backspace]
+          li Hold Ctrl + Left Click to link itens
+          li Zoom: [Mouse Scroll]
+        
+        br
+        h3 Stages
+        ul#stage-list.list-unstyled
+          for prefix in Object.keys(chupim.stages.container).sort()
+            if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
+              h5.stage-prefix
+                i.fas.fa-cubes.text-info
+                  | &nbsp;
+                = `${prefix}`
+              each s in Object.keys(chupim.stages.container[prefix])
+                li.stages.clickable(data-name=s data-type=prefix)
+                  //i.fas.fa-cube.text-danger
+                  img(src='/images/fx2.svg')
+                  | &nbsp;
+                  = s
+              li.separator &nbsp;
+
+    .col.full-height
+      br
+      div
+        if component != undefined
+          h2=`${component.name}`
+          p=`${component.id}`
+            br
+            if component.enabled
+              span.badge.badge-success Enabled
+            else
+              span.badge.badge-secondary Disabled
+      #workspace(width="100%" height="800px")
