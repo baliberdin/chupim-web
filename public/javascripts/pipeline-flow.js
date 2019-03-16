@@ -41,7 +41,9 @@ var css = cytoscape.stylesheet()
       'border-width':'1',
       'border-color':'#fff',
       'shape':'roundrectangle',
-      'font-size': '14px'
+      'font-size': '12px',
+      'letter-spacing': '-4px',
+      'font-family':'monospace'
     })
   .selector('edge')
     .css({
@@ -261,7 +263,7 @@ function render(){
     cy.json().elements.nodes.forEach(element => {
       if(fixedNodes.includes(element.data.id))return;
     
-      var width = element.data.label.length*8;
+      var width = element.data.label.length*9;
       var e = cy.getElementById(element.data.id);
       e.style({width:width});
       

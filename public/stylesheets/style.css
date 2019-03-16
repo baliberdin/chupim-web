@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+
 html {
   position: relative;
   height: 100%;
@@ -6,9 +10,30 @@ html {
 
 body {
   position: relative;
-  margin-top: 56px;
-  height: calc(100% - 56px);
-  min-height: calc(100% - 56px) !important;
+  margin-top: 60px;
+  height: calc(100% - 60px);
+  min-height: calc(100% - 60px) !important;
+}
+
+.navbar-brand {
+  font-family: 'Pacifico';
+  font-size: 24px;
+}
+
+.bg-dark {
+  background-color: #000 !important;
+}
+
+h1, h2, h3, h4, h5, .navbar {
+  font-family: 'PT Sans';
+}
+
+p, a, li, ol, input, select, textarea {
+  font-family: 'PT Sans';
+}
+
+label {
+  font-size: 14px;
 }
 
 .full-height {
@@ -53,6 +78,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
+  font-size: 12px;
 }
 
 .stages:hover {
