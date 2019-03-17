@@ -21,7 +21,7 @@ body {
 }
 
 .bg-dark {
-  background-color: #000 !important;
+  background-color: #171717 !important;
 }
 
 h1, h2, h3, h4, h5, .navbar {
@@ -157,4 +157,8 @@ pre {
 
 .scrolly {
   overflow-y: scroll;
+}
+
+.ace-dracula {
+  background-color: #171717 !important;
 }
