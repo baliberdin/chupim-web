@@ -24,6 +24,8 @@ chupim.start();
 ```
 
 ```bash
+# Enable examples (stages and pipeline)
+export CHUPIM_EXAMPLES=1
 # Start chupim
 node index.js
 ```
