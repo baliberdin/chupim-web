@@ -31,4 +31,4 @@ node index.js
 ## Access to Server 
 [http://localhost:3000](http://localhost:3000)
 
-![home_exemple](/images/home_example.png)
+[Complete Documentation](https://baliberdin.github.io/chupim-web/)
