@@ -19,7 +19,6 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var fs = require('fs');
 var logger = require('morgan');
 var compression = require('compression');
 var filter = require('./web/filter');
