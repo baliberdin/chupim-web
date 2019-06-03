@@ -1,21 +1,34 @@
 {
   "name": "chupim-web",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.1.0",
+  "description": "A Web Pipeline Framework to build APIs",
   "scripts": {
-    "test": "tape tests/**/*.js | tap-spec",
     "start": "node start.js"
   },
   "dependencies": {
     "chupim": "^0.1.2",
     "compression": "^1.7.3",
-    "cryptiles": ">=4.1.2",
     "debug": "~2.6.9",
     "express": "^4.16.4",
-    "hoek": ">=4.2.1",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0",
+    "morgan": "^1.9.1",
     "pug": "^2.0.3",
     "query-string": "^6.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baliberdin/chupim-web.git"
+  },
+  "keywords": [
+    "Pipeline",
+    "BFF",
+    "API",
+    "microservices"
+  ],
+  "author": "Allan Baliberdin <a.baliberdin@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/baliberdin/chupim-web/issues"
+  },
+  "homepage": "https://baliberdin.github.com/chupim-web"
 }

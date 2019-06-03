@@ -10,7 +10,7 @@ Try it yourself. Chupim is based on ExpressJS
 mkdir my-pipeline
 cd my-pipeline
 
-# Here you need to answer some questions about your new project
+# Here you will need to answer some questions about your new project
 # If you are new on nodejs just press enter key for each questions
 npm init
 npm install -s chupim-web
@@ -30,3 +30,5 @@ node index.js
 
 ## Access to Server 
 [http://localhost:3000](http://localhost:3000)
+
+![home_exemple](/images/home_example.png)
