@@ -17,7 +17,7 @@
 
 
 const chupim = require("chupim");
-const errors = require("../web/errors");
+const errors = require("./errors");
 
 module.exports = {
   createContextFromRequest: function(req) {

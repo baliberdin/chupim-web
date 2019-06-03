@@ -17,23 +17,26 @@
 
 var express = require('express');
 var router = express.Router();
-const errors = require('../web/errors');
+const chupim = require('chupim');
+//const errors = require('../web/errors');
 
 router.get('/', function(req, res, next) {
   let key = req.query.key;
   let keys = [];
   let logs;
 
-  errors.errorsLog.forEach( e => {
-    if(!keys.includes(e.key)){
-      keys.push(e.key);
-    }
-  });
+  keys = chupim.errors.loggedKeys();
+  // errors.errorsLog.forEach( e => {
+  //   if(!keys.includes(e.key)){
+  //     keys.push(e.key);
+  //   }
+  // });
   
   if(key){
-    logs = errors.errorsLog.filter(e => e.key == key);
+    //logs = errors.errorsLog.filter(e => e.key == key);
+    logs = chupim.errors.filteredByKey(key);
   }else{
-    logs = errors.errorsLog;
+    logs = chupim.errors.errorsLog;
   }
 
   logs = logs.sort((a,b) => {
@@ -61,9 +64,9 @@ router.get('/api', function(req, res, next) {
   let key = req.query.key;
   res.setHeader('Content-Type', 'application/json');
   if(key){
-    res.send({errors:errors.errorsLog.filter(e => e.key == key)});
+    res.send({errors:chupim.errors.filteredByKey(key)});
   }else{
-    res.send({errors:errors.errorsLog});
+    res.send({errors:chupim.errors.errorsLog});
   }
 	
 });

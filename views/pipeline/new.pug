@@ -23,7 +23,7 @@ block content
           button.close(type="button" data-dismiss="modal" aria-label="Close")
             span(aria-hidden="true") ×
         .modal-body
-          form#pipeline-save-form.form.needs-validation(name="newPipelineForm" action='/api/' method='post'  novalidate)
+          form#pipeline-save-form.form.needs-validation(name="newPipelineForm" action='/pipeline/' method='post'  novalidate)
             .form-group
               input.form-control(type='hidden' name='stages' required)
               input.form-control(type='hidden' name='enabled' required value=`${component != undefined? component.enabled: false}`)

@@ -1,10 +1,11 @@
 ul.navbar-nav.mr-auto
-  li.nav-item.active.dropdown
-    a#navbarNewDropdown.nav-link.dropdown-toggle(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-      | File 
-    .dropdown-menu(aria-labelledby="navbarNewDropdown")
-      a.dropdown-item(href="/pipeline/new") New Pipeline
-      a.dropdown-item(href="stage/new") New Stage
+  if process.env['CHUPIM_ENV'] == 'development'
+    li.nav-item.active.dropdown
+      a#navbarNewDropdown.nav-link.dropdown-toggle(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+        | File 
+      .dropdown-menu(aria-labelledby="navbarNewDropdown")
+        a.dropdown-item(href="/pipeline/new") New Pipeline
+        a.dropdown-item(href="stage/new") New Stage
   li.nav-item.active
     a.nav-link(href="/metrics")
       | Metrics 

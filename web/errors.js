@@ -19,7 +19,6 @@ var createError = require('http-errors');
 const chupim = require('chupim');
 
 module.exports = {
-  errorsLog: [],
 
   unloggedErrors: [
     createError.Unauthorized, 
@@ -28,26 +27,9 @@ module.exports = {
     createError.Forbidden
   ],
 
-  addErrorLog: function(error){
-    if(this.errorsLog.length >= 1000){
-      this.errorsLog.shift();
-    }
-    this.errorsLog.push(error);
-  },
-
   addComponentError: function(totalTime, res, key, error) {
-
     if(!this.unloggedErrors.includes(error.constructor)){ 
-      if(error.constructor === TypeError){
-        error = {
-          name:error.name,
-          message:error.message, 
-          filename:error.filename, 
-          column:error.columnNumber, 
-          stack:error.stack};
-      }
-
-      this.addErrorLog({key:key, error:error, date:new Date()});
+      chupim.errors.addError(key,error);
       chupim.metrics.addError(key);
     }
 

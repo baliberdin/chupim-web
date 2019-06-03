@@ -20,7 +20,7 @@ $(document).ready(function(){
           $(event.currentTarget).prop('data-failed', true);
           $(event.currentTarget).prop('checked', !enabled);
           $(event.currentTarget).click();
-          showError(`Error on change pipeline status!<br>${request.statusText}`,'#');
+          showError(`Error on change pipeline status!<br>${request.statusText} [${request.status}]`,'#');
         }
       });
       request.send();
