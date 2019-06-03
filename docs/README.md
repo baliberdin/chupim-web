@@ -4,13 +4,29 @@ from different resources and present them as if they were just one.
 Go ahead and create something new using pipelines.
 
 
-## Server Startup
+## Start a New Project with Chupim Web
 Try it yourself. Chupim is based on ExpressJS
-```shell
-git clone git@github.com:baliberdin/chupim-web.git
-cd chupim-web
-npm install && npm start
+```bash
+mkdir my-pipeline
+cd my-pipeline
+
+# Here you need to answer some questions about your new project
+# If you are new on nodejs just press enter key for each questions
+npm init
+npm install -s chupim-web
 ```
 
-## Server Address
+Create a new `index.js` file like this
+```javascript
+// index.js
+const chupim = require('chupim-web');
+chupim.start();
+```
+
+```bash
+# Start chupim
+node index.js
+```
+
+## Access to Server 
 [http://localhost:3000](http://localhost:3000)

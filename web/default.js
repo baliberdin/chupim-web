@@ -87,10 +87,19 @@ chupim.registerStage({
   }
 });
 
+chupim.registerStage({
+  prefix: "Hello World", 
+  name: "sayHello", 
+  fn: async context => {
+    context.say = "Hello World!";
+    return context;
+  }
+});
+
 chupim.registerComponent({
-  id:'v1/something',
-  name: 'Something API',
-  stages:['HTTP Filters.Get?'],
+  id:'v1/helloworld',
+  name: 'Helo World API',
+  stages:['HTTP Filters.Get?', 'Hello World.sayHello'],
   enabled: true,
   methods: ['GET','POST']
 });
