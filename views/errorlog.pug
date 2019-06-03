@@ -52,8 +52,7 @@ block content
                     div= l.date.toLocaleTimeString()
                   td.text-left
                     span.badge.badge-danger= l.error.status
-                  td.text-left.small= l.error.message
-                  td.text-left
-                    span.text-danger= l.error.stack
+                  td.text-left.text-danger= l.error.message
+                  td.text-left(title=l.error.stack)= `${l.error.stack?l.error.stack.substr(0,100):''}...`
       else
         p= `There is no error logs to show${key==undefined?".":" for component: "+key}`

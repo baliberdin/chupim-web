@@ -53,6 +53,24 @@ router.get('/pipeline/new', function(req, res, next) {
 });
 
 
+/* Create new chupim entry for a pipeline */
+router.post('/pipeline', function(req, res, next) {
+	var stages = eval(req.body.stages);
+	var path = req.body.path;
+  var elements = JSON.parse(req.body.elements);
+	var name = req.body.name;
+	var methods = req.body.methods;
+	var enabled = (req.body.enabled == 'true');
+
+  if(stages == undefined || path == undefined || name == undefined || elements == undefined){
+    res.redirect("/pipeline/new");  
+  }else{
+    chupim.registerComponent({id:path,name:name,stages:stages, elements:elements, methods:methods, enabled:enabled});
+	  res.redirect("/");
+  }
+});
+
+
 /* Edit a pipeline */
 router.get('/pipeline/edit/*', function(req, res, next) {
 	var componentName = req.params['0'];
@@ -79,10 +97,10 @@ router.get('/pipeline/update/*', function(req, res, next) {
 			if(updateableKeys.includes(k)){
 				if(k == 'enabled' && req.query[k] == 'true'){
 					component[k] = true;
-					console.log(`Component key[${k}] updated to: ${req.query[k]}`);
+					//console.log(`Component key[${k}] updated to: ${req.query[k]}`);
 				}else if(k == 'enabled' && req.query[k] == 'false'){
 					component[k] = false;
-					console.log(`Component key[${k}] updated to: ${req.query[k]}`);
+					//console.log(`Component key[${k}] updated to: ${req.query[k]}`);
 				}
 			}
 		});

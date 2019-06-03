@@ -20,23 +20,6 @@ var router = express.Router();
 const controller = require('../web/controller');
 const chupim = require('chupim');
 
-/* Create new chupim entry for a pipeline */
-router.post('/', function(req, res, next) {
-	var stages = eval(req.body.stages);
-	var path = req.body.path;
-  var elements = JSON.parse(req.body.elements);
-	var name = req.body.name;
-	var methods = req.body.methods;
-	var enabled = (req.body.enabled == 'true');
-
-  if(stages == undefined || path == undefined || name == undefined || elements == undefined){
-    res.redirect("/pipeline/new");  
-  }else{
-    chupim.registerComponent({id:path,name:name,stages:stages, elements:elements, methods:methods, enabled:enabled});
-	  res.redirect("/");
-  }
-});
-
 /* Execute pipeline */
 router.get('/*', function(req, res, next) {
 	return controller.doRequest(req,res,next);

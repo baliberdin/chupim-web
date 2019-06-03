@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "test": "tape tests/**/*.js | tap-spec"
+    "test": "tape tests/**/*.js | tap-spec",
+    "start": "node start.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "chupim": "0.1.0",
+    "chupim": "^0.1.2",
     "compression": "^1.7.3",
     "cryptiles": ">=4.1.2",
     "debug": "~2.6.9",

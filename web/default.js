@@ -86,3 +86,11 @@ chupim.registerStage({
     if (context._chupim_.method == "DELETE") return context;
   }
 });
+
+chupim.registerComponent({
+  id:'v1/something',
+  name: 'Something API',
+  stages:['HTTP Filters.Get?'],
+  enabled: true,
+  methods: ['GET','POST']
+});

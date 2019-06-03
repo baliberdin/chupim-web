@@ -42,8 +42,7 @@ var css = cytoscape.stylesheet()
       'border-color':'#fff',
       'shape':'roundrectangle',
       'font-size': '12px',
-      'letter-spacing': '-4px',
-      'font-family':'monospace'
+      'font-family':'Inconsolata'
     })
   .selector('edge')
     .css({
@@ -220,6 +219,7 @@ $(document).ready(function(){
       }else{
         e.classes='fixed-node';
       }
+      e.data.label += "()";
     });
     buildGraph(elements);
   }else{
@@ -232,8 +232,8 @@ $(document).ready(function(){
     var type = $(this).attr('data-type');
     var rootId = $(this).attr('data-name');
     var configName = `${type}.${rootId}`;
-    rootId = rootId.substring(0,1).toUpperCase()+rootId.substring(1);
-    var width = (rootId.length*9)+4;
+    rootId = rootId.substring(0,1).toUpperCase()+rootId.substring(1)+"()";
+    var width = (rootId.length*8)+4;
     
     cy.add({
       group: "nodes",
@@ -263,7 +263,7 @@ function render(){
     cy.json().elements.nodes.forEach(element => {
       if(fixedNodes.includes(element.data.id))return;
     
-      var width = element.data.label.length*9;
+      var width = element.data.label.length*8+4;
       var e = cy.getElementById(element.data.id);
       e.style({width:width});
       
