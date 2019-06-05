@@ -24,8 +24,6 @@ chupim.start();
 ```
 
 ```bash
-# Enable examples (stages and pipeline)
-export CHUPIM_EXAMPLES=1
 # Start chupim
 node index.js
 ```
@@ -33,4 +31,4 @@ node index.js
 ## Access to Server 
 [http://localhost:3000](http://localhost:3000)
 
-[Complete Documentation](https://baliberdin.github.io/chupim-web/)
+![home_exemple](/images/home_example.png)
