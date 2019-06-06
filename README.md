@@ -4,6 +4,8 @@ Chupim is a simple pipeline constructor that allows you to compose an API
 from different resources and present them as if they were just one.
 Go ahead and create something new using pipelines.
 
+![doc_banner](/images/doc_banner.png)
+
 - [Quick Start](#quick-start)
   - [Access to Server](#access-to-server)
 - [Creating Stages](#creating-stages)
