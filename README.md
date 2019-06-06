@@ -6,7 +6,7 @@ Go ahead and create something new using pipelines.
 
 - [Quick Start](#quick-start)
   - [Access to Server](#access-to-server)
-- [Creating Stages](#creationg-stages)
+- [Creating Stages](#creating-stages)
   - [Programmatically](#programmatically)
   - [Runtime Stages](#runtime-stages)
   - [Stage Functions](#stage-functions)
