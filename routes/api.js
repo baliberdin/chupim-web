@@ -20,6 +20,10 @@ var router = express.Router();
 const controller = require('../web/controller');
 const chupim = require('chupim');
 
+router.get('/', function(req, res, next) {
+    controller.listResources(req, res, next);
+});
+
 /* Execute pipeline */
 router.get('/*', function(req, res, next) {
 	return controller.doRequest(req,res,next);
