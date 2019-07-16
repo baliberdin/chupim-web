@@ -81,5 +81,33 @@ module.exports = {
     } else {
       return errors.notFound(res);
     }
+  },
+
+  listResources: function(req, res, next){
+    let host = req.headers['host'];
+    res.setHeader('Content-Type','application/json');
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    
+    var resources = {
+        title:"Chupim Resources",
+        resources: [],
+        links: {
+          self:`http://${host}/api`
+        }
+    };
+
+    Object.keys(chupim.components).forEach(k => {
+      let c = chupim.components[k];
+      resources.resources.push({
+        name: c.name,
+        uri: c.id,
+        link:`http://${host}/api/${c.id}`,
+        state: c.enabled? 'enabled': 'unavailable'
+      });
+    });
+
+    res.send(resources);
   }
+
+
 };
