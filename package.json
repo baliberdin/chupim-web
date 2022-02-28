@@ -1,18 +1,18 @@
 {
   "name": "chupim-web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Web Pipeline Framework to build APIs",
   "scripts": {
     "start": "node start.js"
   },
   "dependencies": {
-    "chupim": "^0.1.2",
+    "chupim": "^0.1.4",
     "compression": "^1.7.3",
     "debug": "~2.6.9",
     "express": "^4.16.4",
     "http-errors": "~1.6.2",
     "morgan": "^1.9.1",
-    "pug": "^2.0.3",
+    "pug": "^3.0.2",
     "query-string": "^6.4.0"
   },
   "repository": {
