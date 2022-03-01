@@ -1,6 +1,6 @@
 {
   "name": "chupim-web",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Web Pipeline Framework to build APIs",
   "scripts": {
     "start": "node start.js"
