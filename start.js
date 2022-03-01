@@ -20,6 +20,7 @@ let chupim = require('./index');
 /**
  *   Overriding the examples environment variable to show default stages and pipelines, 
  * for who's starting Chupim from the root of the repository
+ * process.env['CHUPIM_EXAMPLES'] = 1;
  **/
-process.env['CHUPIM_EXAMPLES'] = 1;
+
 chupim.start();

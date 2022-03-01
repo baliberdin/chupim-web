@@ -74,7 +74,8 @@ app.use(function(err, req, res, next) {
   
 });
 
-chupim.metrics.startDataUpdater(); 
+chupim.metrics.startDataUpdater();
+ 
 if(process.env['CHUPIM_EXAMPLES'] == 1){
   console.info("Loading example project: Stages and Pipelines for testing purpose. Set CHUPIM_EXAMPLES=0 to disable.");
   require('./web/default');

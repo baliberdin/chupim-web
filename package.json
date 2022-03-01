@@ -6,7 +6,7 @@
     "start": "node start.js"
   },
   "dependencies": {
-    "chupim": "^0.1.4",
+    "chupim": "^0.1.5",
     "compression": "^1.7.3",
     "debug": "~2.6.9",
     "express": "^4.16.4",
