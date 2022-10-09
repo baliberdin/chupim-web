@@ -12,8 +12,7 @@ block content
       .modal-content
         .modal-header
           h5.modal-title Save New Stage
-          button.close(type="button" data-dismiss="modal" aria-label="Close")
-            span(aria-hidden="true") ×
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
         .modal-body
           form#stage-save-form.form.needs-validation(action='/stage' method='post' novalidate)
             input(type='hidden' name='circuitBreaker.enabled')
@@ -35,7 +34,7 @@ block content
               input#stage-name.form-control(placeholder='myStage' name='name' value=stage!=undefined?stage.name:"" required)
               .invalid-feedback This field could not be empty
         .modal-footer
-          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+          button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
           button.btn.btn-primary(type="submit" form="stage-save-form") Save changes
 
   .row.full-height
@@ -45,7 +44,7 @@ block content
       article
         header
           h2 Stage Editor
-          p Here we can create our stages on the fly.
+          p Here you can create your stages on the fly.
         hr
       article#collapseAdvanced.collapse
         header

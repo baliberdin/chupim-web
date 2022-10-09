@@ -3,9 +3,9 @@ var pressedKey = undefined;
 var fixedNodes = ['Input','Output'];
 var points = [];
 var prefixColors = [
-  {bg:'#5899DA',fg:'#fff'},
+  {bg:'#5899DA', fg:'#fff'},
   {bg:'#E8743B', fg:'#fff'},
-  {bg:'#19A979',fg:'#fff'},
+  {bg:'#19A979', fg:'#fff'},
   {bg:'#ED4A7B', fg:'#fff'},
   {bg:'#945ECF', fg:'#fff'},
   {bg:'#13A4B4', fg:'#fff'},
@@ -41,8 +41,7 @@ var css = cytoscape.stylesheet()
       'border-width':'1',
       'border-color':'#fff',
       'shape':'roundrectangle',
-      'font-size': '12px',
-      'font-family':'Inconsolata'
+      'font-size': '12px'
     })
   .selector('edge')
     .css({
@@ -57,8 +56,9 @@ var css = cytoscape.stylesheet()
     .css({
       'content': 'data(label)',
       'color':'#666',
-      'width': '60',
-      'shape': 'tag',
+      'width': '70',
+      'shape': 'polygon',
+      'shape-polygon-points': '-0.8 -1 1 -1, 0.8 1 -1 1',
       'border-color':'#888',
       'padding':'0px'
     })
@@ -159,8 +159,7 @@ function connectElements(sourceElement, targetElement){
 }
 
 window.addEventListener("keydown", function(e,obj){
-  
-  if( (e.keyCode == 127 || e.keyCode == 8) && selectedItem != undefined && isDeleteable(selectedItem)){
+  if( (e.keyCode == 127 || e.keyCode == 8 || e.keyCode == 46) && selectedItem != undefined && isDeleteable(selectedItem)){
     cy.remove(selectedItem);
     selectedItem = undefined;
   }
@@ -199,7 +198,7 @@ $(document).ready(function(){
   $('#pipeline-save-form').submit(validatePipelineForm);
 
   var packageList = [];
-  $('h5.stage-prefix').each( (a,b) => packageList.push(hash(b.innerText)));
+  $('#stage-list > li > span').each( (a,b) => packageList.push(hash(b.innerText)));
   for(var i=0; i<packageList.length; i++){
     var p = packageList[i];
     var colors = getPrefixColor(p);
@@ -219,7 +218,7 @@ $(document).ready(function(){
       }else{
         e.classes='fixed-node';
       }
-      e.data.label += "()";
+      e.data.label += "() ";
     });
     buildGraph(elements);
   }else{
@@ -232,7 +231,7 @@ $(document).ready(function(){
     var type = $(this).attr('data-type');
     var rootId = $(this).attr('data-name');
     var configName = `${type}.${rootId}`;
-    rootId = rootId.substring(0,1).toUpperCase()+rootId.substring(1)+"()";
+    rootId = rootId.substring(0,1).toUpperCase()+rootId.substring(1)+"() ";
     var width = (rootId.length*8)+4;
     
     cy.add({
@@ -252,7 +251,9 @@ function savePipeline(){
   var pipeline = extractSerialPipeline(points[fixedNodes[0]]);
   $('#pipeline-save-form input[name=stages]').val(JSON.stringify(pipeline));
   $('#pipeline-save-form input[name=elements]').val(JSON.stringify(cy.json().elements));
-  $('#pipeline-save-modal').modal({});
+  //$('#pipeline-save-modal').modal({});
+
+  const myModalAlternative = new bootstrap.Modal('#pipeline-save-modal', {}).show()
 
   return false;
 }

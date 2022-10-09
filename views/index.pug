@@ -36,30 +36,39 @@ block content
     .col-2.full-height.right-shadow.scrolly
       br
       h3 Stages
-      if Object.keys(chupim.stages.container).length == 0
-        p There is no stages to show. You can create one 
-          a(href='/stage/new') here
-      else
-        br
-        ul#stage-list.list-unstyled
-          for prefix, indx in Object.keys(chupim.stages.container).sort()
-            if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
-              li
-                //a.text-body(data-toggle='collapse' href=`#package_${indx}` aria-controls=`package_${indx}` role="button" aria-expanded="false")
-                h5.stage-prefix
-                  i.fas.fa-cubes.text-info
-                  | &nbsp;
-                  =prefix
+      //- #acc_stages.accordion.accordion-flush
+      //-   if Object.keys(chupim.stages.container).length == 0
+      //-     p There is no stages to show. You can create one 
+      //-       a(href='/stage/new') here
+      //-   else
+      //-     for prefix, indx in Object.keys(chupim.stages.container).sort()
+      //-       if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
+      //-         .accordion-item
+      //-           h2.accordion-header(id=`acc_head_${indx}`)
+      //-             button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target=`#collapse_${indx}` aria-expanded="false" aria-controls=`collapse_${indx}`)=prefix
+      //-           for stage in Object.keys(chupim.stages.container[prefix]).sort()
+      //-             .accordion-collapse.collapse(id=`collapse_${indx}` aria-labelledby=`acc_head_${indx}` data-bs-parent="#acc_stages")
+      //-               .accordion-body=stage
 
-                ul.list-unstyled(id=`package_${indx}`)
-                  for stage in Object.keys(chupim.stages.container[prefix]).sort()
-                    li
-                      a.clickable(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}`)
-                        //i.fas.fa-cube.text-danger
-                        img(src='/images/fx2.svg')
-                        | &nbsp;
-                        = `${stage}`
-              li.separator &nbsp;
+      
+      ul#stage-list.list-unstyled
+        for prefix, indx in Object.keys(chupim.stages.container).sort()
+          if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
+            li
+              a.text-body(data-toggle='collapse' href=`#package_${indx}` aria-controls=`package_${indx}` role="button" aria-expanded="false")
+              
+                i.fa-regular.fa-folder-open.text-secondary
+                | &nbsp; &nbsp;
+                =prefix
+
+              ul.list-unstyled(id=`package_${indx}`)
+                for stage in Object.keys(chupim.stages.container[prefix]).sort()
+                  li.clickable
+                    i.fa-regular.fa-file-code
+                    | &nbsp; &nbsp;
+                    a(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}`)
+                      = `${stage}`
+            li.separator &nbsp;
 
     .col.right-shadow
       br
@@ -95,17 +104,20 @@ block content
                   span= `${chupim.metrics.getResponseTime("/api/"+sc)}`
                 td.text-left
                   if chupim.metrics.getErrorsPercent("/api/"+sc) <= 0
-                    span.badge.badge-secondary= `N/A`
+                    span= `N/A`
                   else if chupim.metrics.getErrorsPercent("/api/"+sc) <= 2
                     span.badge.badge-warning= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
                   else if chupim.metrics.getErrorsPercent("/api/"+sc) > 2
                     span.badge.badge-danger= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
                 td.text-left 
-                  a(href=`/pipeline/edit/${sc}`)
-                      i.far.fa-edit
-                  |&nbsp;
-                  a.action-remove(href=`#` data-alert=`Delete pipeline ${chupim.components[sc].name}?` data-link=`/pipeline/remove/${sc}`)
-                      i.fas.fa-trash-alt.text-danger
+                  a(href=`/api/${sc}` target='blank' title='Access pipeline entrypoint in new tab')
+                    i.fa-regular.fa-share-from-square
+                  | &nbsp; &nbsp;
+                  a(href=`/pipeline/edit/${sc}` title='Edit pipeline')
+                    i.far.fa-edit
+                  | &nbsp; &nbsp;
+                  a.action-remove(href=`#` data-alert=`Delete pipeline ${chupim.components[sc].name}?` data-link=`/pipeline/remove/${sc}` title='Delete pipeline')
+                    i.fa-regular.fa-trash-can.text-danger
       
     
 

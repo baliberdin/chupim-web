@@ -1,16 +1,16 @@
 ul.navbar-nav.mr-auto
   li.nav-item.active.dropdown
-    a#navbarNewDropdown.nav-link.dropdown-toggle(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+    a#navbarNewDropdown.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
       | File 
     .dropdown-menu(aria-labelledby="navbarNewDropdown")
-      a#menu-stage-save.dropdown-item(href='#' data-toggle="modal" data-target="#stage-save-modal") Save
+      a#menu-stage-save.dropdown-item(href='#' data-bs-toggle="modal" data-bs-target="#stage-save-modal") Save
       a.dropdown-item(href="/") Exit
 
   li.nav-item.dropdown  
-    a.nav-link.dropdown-toggle(href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+    a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
       | Advanced 
     .dropdown-menu(aria-labelledby="navbarNewDropdown")
-      a.dropdown-item(data-toggle="collapse" href="#collapseAdvanced" role="button" aria-expanded="false" aria-controls="collapseAdvanced") Circuit Breaker
+      a.dropdown-item(data-bs-toggle="collapse" href="#collapseAdvanced" role="button" aria-expanded="false" aria-controls="collapseAdvanced") Circuit Breaker
   
   li.nav-item  
-    a.nav-link(data-toggle="collapse" href="#collapseHelp" role="button" aria-expanded="false" aria-controls="collapseHelp") How to Code
+    a.nav-link(data-bs-toggle="collapse" href="#collapseHelp" role="button" aria-expanded="false" aria-controls="collapseHelp") How to Code
