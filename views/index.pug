@@ -4,8 +4,8 @@ block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js')
   script(src='/javascripts/main.js')
 
-block navigator
-  include includes/navigator
+//- block navigator
+//-   include includes/navigator
 
 block content
   #alert-modal.modal(tabindex="-1" role="dialog")
@@ -32,96 +32,93 @@ block content
         .modal-footer
           button.btn.btn-danger(type="button" data-dismiss="modal") OK
     
-  .row.full-height
-    .col-2.full-height.right-shadow.scrolly
-      br
-      h3 Stages
-      //- #acc_stages.accordion.accordion-flush
-      //-   if Object.keys(chupim.stages.container).length == 0
-      //-     p There is no stages to show. You can create one 
-      //-       a(href='/stage/new') here
-      //-   else
-      //-     for prefix, indx in Object.keys(chupim.stages.container).sort()
-      //-       if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
-      //-         .accordion-item
-      //-           h2.accordion-header(id=`acc_head_${indx}`)
-      //-             button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target=`#collapse_${indx}` aria-expanded="false" aria-controls=`collapse_${indx}`)=prefix
-      //-           for stage in Object.keys(chupim.stages.container[prefix]).sort()
-      //-             .accordion-collapse.collapse(id=`collapse_${indx}` aria-labelledby=`acc_head_${indx}` data-bs-parent="#acc_stages")
-      //-               .accordion-body=stage
+
+
+          
+      
+      //- h3 Stages
+      //- //- #acc_stages.accordion.accordion-flush
+      //- //-   if Object.keys(chupim.stages.container).length == 0
+      //- //-     p There is no stages to show. You can create one 
+      //- //-       a(href='/stage/new') here
+      //- //-   else
+      //- //-     for prefix, indx in Object.keys(chupim.stages.container).sort()
+      //- //-       if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
+      //- //-         .accordion-item
+      //- //-           h2.accordion-header(id=`acc_head_${indx}`)
+      //- //-             button.accordion-button.collapsed(type="button" data-bs-toggle="collapse" data-bs-target=`#collapse_${indx}` aria-expanded="false" aria-controls=`collapse_${indx}`)=prefix
+      //- //-           for stage in Object.keys(chupim.stages.container[prefix]).sort()
+      //- //-             .accordion-collapse.collapse(id=`collapse_${indx}` aria-labelledby=`acc_head_${indx}` data-bs-parent="#acc_stages")
+      //- //-               .accordion-body=stage
 
       
-      ul#stage-list.list-unstyled
-        for prefix, indx in Object.keys(chupim.stages.container).sort()
-          if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
-            li
-              a.text-body(data-toggle='collapse' href=`#package_${indx}` aria-controls=`package_${indx}` role="button" aria-expanded="false")
+      //- ul#stage-list.list-unstyled
+      //-   for prefix, indx in Object.keys(chupim.stages.container).sort()
+      //-     if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
+      //-       li
+      //-         a.text-body(data-toggle='collapse' href=`#package_${indx}` aria-controls=`package_${indx}` role="button" aria-expanded="false")
               
-                i.fa-regular.fa-folder-open.text-secondary
-                | &nbsp; &nbsp;
-                =prefix
+      //-           i.fa-regular.fa-folder-open.text-secondary
+      //-           | &nbsp; &nbsp;
+      //-           =prefix
 
-              ul.list-unstyled(id=`package_${indx}`)
-                for stage in Object.keys(chupim.stages.container[prefix]).sort()
-                  li.clickable
-                    i.fa-regular.fa-file-code
-                    | &nbsp; &nbsp;
-                    a(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}`)
-                      = `${stage}`
-            li.separator &nbsp;
+      //-         ul.list-unstyled(id=`package_${indx}`)
+      //-           for stage in Object.keys(chupim.stages.container[prefix]).sort()
+      //-             li.clickable
+      //-               i.fa-regular.fa-file-code
+      //-               | &nbsp; &nbsp;
+      //-               a(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}`)
+      //-                 = `${stage}`
+      //-       li.separator &nbsp;
 
-    .col.right-shadow
-      br
-      h2 Resources
-      if Object.keys(chupim.components).length == 0
-        p There is no resources to show. Go and create one 
-          a(href='/pipeline/new') here
-      else
-        table.table.table-sm.table-hover.table-borderless
-          thead
-            tr
-              th.text-left State
-              th.text-left Name
-              th.text-left Entrypoint
-              th.text-left RPM
-              th.text-left Time
-              th.text-left Errors
-              th.text-left Actions
-          tbody
-            for sc in Object.keys(chupim.components).sort((a,b) => {if (chupim.components[a].name < chupim.components[b].name)return -1;if (chupim.components[a].name > chupim.components[b].name)return 1;return 0;})
+  .col-sm
+    .p-3.main-header
+      h1 Resources
+      p Resources are API endpoints that exposes certain pipeline process and you can call then over HTTP request. Take a try!
+      a.btn.btn-secondary(href='/pipeline/new') Add New
+    .p-3
+        if Object.keys(chupim.components).length == 0
+          p There is no resources to show. Go and create one 
+            a(href='/pipeline/new') here
+        else
+          table.table.table-hover 
+            thead
               tr
-                td.text-left
-                  if chupim.components[sc].enabled == true
-                    input.btn.btn-xs(type="checkbox" data-toggle="toggle" data-size='mini' data-offstyle='secondary' data-onstyle='success' data-width='35' data-height='22' data-pipeline=sc checked)
-                  else
-                    input.btn.btn-xs(type="checkbox" data-toggle="toggle" data-size='mini' data-offstyle='secondary' data-onstyle='success' data-width='35' data-height='22' data-pipeline=sc)
-                td.text-left= chupim.components[sc].name
-                td.text-left
-                  a(href=`/api/${sc}`)= `/api/${sc}`
-                td.text-left
-                  span= chupim.metrics.getRPM("/api/"+sc)
-                td.text-left
-                  span= `${chupim.metrics.getResponseTime("/api/"+sc)}`
-                td.text-left
-                  if chupim.metrics.getErrorsPercent("/api/"+sc) <= 0
-                    span= `N/A`
-                  else if chupim.metrics.getErrorsPercent("/api/"+sc) <= 2
-                    span.badge.badge-warning= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
-                  else if chupim.metrics.getErrorsPercent("/api/"+sc) > 2
-                    span.badge.badge-danger= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
-                td.text-left 
-                  a(href=`/api/${sc}` target='blank' title='Access pipeline entrypoint in new tab')
-                    i.fa-regular.fa-share-from-square
-                  | &nbsp; &nbsp;
-                  a(href=`/pipeline/edit/${sc}` title='Edit pipeline')
-                    i.far.fa-edit
-                  | &nbsp; &nbsp;
-                  a.action-remove(href=`#` data-alert=`Delete pipeline ${chupim.components[sc].name}?` data-link=`/pipeline/remove/${sc}` title='Delete pipeline')
-                    i.fa-regular.fa-trash-can.text-danger
-      
-    
-
-                          
-                          
-  br
-  .row#chart-container
+                th.text-left State
+                th.text-left Name
+                th.text-left Entrypoint
+                th.text-left RPM
+                th.text-left Time
+                th.text-left Errors
+                th.text-left Actions
+            tbody
+              for sc in Object.keys(chupim.components).sort((a,b) => {if (chupim.components[a].name < chupim.components[b].name)return -1;if (chupim.components[a].name > chupim.components[b].name)return 1;return 0;})
+                tr
+                  td.text-left
+                    if chupim.components[sc].enabled == true
+                      input.btn.btn-xs(type="checkbox" data-toggle="toggle" data-size='mini' data-offstyle='secondary' data-onstyle='success' data-width='35' data-height='22' data-pipeline=sc checked)
+                    else
+                      input.btn.btn-xs(type="checkbox" data-toggle="toggle" data-size='mini' data-offstyle='secondary' data-onstyle='success' data-width='35' data-height='22' data-pipeline=sc)
+                  td.text-left= chupim.components[sc].name
+                  td.text-left
+                    a(href=`/api/${sc}`)= `/api/${sc}`
+                  td.text-left
+                    span= chupim.metrics.getRPM("/api/"+sc)
+                  td.text-left
+                    span= `${chupim.metrics.getResponseTime("/api/"+sc)}`
+                  td.text-left
+                    if chupim.metrics.getErrorsPercent("/api/"+sc) <= 0
+                      span= `N/A`
+                    else if chupim.metrics.getErrorsPercent("/api/"+sc) <= 2
+                      span.badge.bg-warning= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
+                    else if chupim.metrics.getErrorsPercent("/api/"+sc) > 2
+                      span.badge.bg-danger= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
+                  td.text-left 
+                    a(href=`/api/${sc}` target='blank' title='Access pipeline entrypoint in new tab')
+                      i.fa-regular.fa-share-from-square
+                    | &nbsp; &nbsp;
+                    a(href=`/pipeline/edit/${sc}` title='Edit pipeline')
+                      i.far.fa-edit
+                    | &nbsp; &nbsp;
+                    a.action-remove(href=`#` data-alert=`Delete pipeline ${chupim.components[sc].name}?` data-link=`/pipeline/remove/${sc}` title='Delete pipeline')
+                      i.fa-regular.fa-trash-can.text-danger

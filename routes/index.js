@@ -128,6 +128,14 @@ router.get('/stage/new', function(req, res, next) {
 	});
 });
 
+/* Editor for new Stage */
+router.get('/stage', function(req, res, next) {
+	res.render('stages/index', { 
+		title: 'Stage Functions',
+        chupim:chupim
+	});
+});
+
 
 /* Create a new Stage from source */
 router.post('/stage', function(req, res, next) {
@@ -146,7 +154,7 @@ router.post('/stage', function(req, res, next) {
 	stage.fn = eval(req.body.source);
 	chupim.registerStage(stage);
 
-	res.redirect("/");
+	res.redirect("/stage");
 });
 
 
@@ -156,7 +164,7 @@ router.get('/stage/:prefix/*', function(req, res, next) {
 	var stageName = req.params['0'];
 	var stageFullName = `${prefix}.${stageName}`;
 
-	var stage = chupim.getStage(stageFullName);
+	var stage = chupim.getStageByPackage(prefix, stageName);
 
 	if(stage){
 		res.render('stages/new', { 

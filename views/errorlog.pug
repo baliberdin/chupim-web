@@ -4,55 +4,57 @@ block scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js')
   script(src='/javascripts/errorlog.js')
 
-block navigator
-  include includes/navigator
+//- block navigator
+//-   include includes/navigator
 
 block content
-  .row.scrollable.full-height
-    .col-2.right-shadow
-      br
-      h2 Error logs
+  .col-sm
+    .p-3.main-header
+      h1 Error logs
       p Here are the error logs that happened on the last minutes.
 
-      br
-      h3 Filters
-      .form-group
-        label Resource
-        select#logkeylist.form-control
-          option(value="") All
-          for r in keys
-            if key==r
-              option(selected value=r)= r
-            else
-              option(value=r)= r
-    
-    .col-10
-      br
-      br
-      if logs.length > 0
-        table.table.table-sm.table-hover.table-borderless.table-striped
-            thead
-              tr
-                th.text-left Resource
-                th.text-left Date
-                th.text-left Time
-                th.text-left Status
-                th.text-left Message
-                th.text-left Stack
-            tbody
-              for l in logs
-                tr
-                  td.text-left
-                    span.badge.badge-warning
-                      i.fas.fa-exclamation-triangle
-                      = ` ${l.key}`
-                  td.text-left.small
-                    div= l.date.toLocaleDateString()
-                  td.text-left.small
-                    div= l.date.toLocaleTimeString()
-                  td.text-left
-                    span.badge.badge-danger= l.error.status
-                  td.text-left.text-danger= l.error.message
-                  td.text-left(title=l.error.stack)= `${l.error.stack?l.error.stack.substr(0,100):''}...`
-      else
-        p= `There is no error logs to show${key==undefined?".":" for component: "+key}`
+
+    .container-fluid.flex-shrink-1
+      .flex-wrap.d-flex.full-height.flex-column
+
+        .col-2.right-shadow.p-3.full-height
+          br
+          h3 Filters
+          .form-group
+            label Resource
+            select#logkeylist.form-control
+              option(value="") All
+              for r in keys
+                if key==r
+                  option(selected value=r)= r
+                else
+                  option(value=r)= r
+        
+        .col-10.p-3
+          if logs.length > 0
+            table.table.table-sm.table-hover.table-borderless.table-striped
+                thead
+                  tr
+                    th.text-left Resource
+                    th.text-left Date
+                    th.text-left Time
+                    th.text-left Status
+                    th.text-left Message
+                    th.text-left Stack
+                tbody
+                  for l in logs
+                    tr
+                      td.text-left
+                        span.badge.bg-warning
+                          i.fas.fa-exclamation-triangle
+                          = ` ${l.key}`
+                      td.text-left.small
+                        div= l.date.toLocaleDateString()
+                      td.text-left.small
+                        div= l.date.toLocaleTimeString()
+                      td.text-left
+                        span.badge.bg-danger= l.error.status
+                      td.text-left.text-danger= l.error.message
+                      td.text-left(title=l.error.stack)= `${l.error.stack?l.error.stack.substr(0,100):''}...`
+          else
+            p= `There is no error logs to show${key==undefined?".":" for component: "+key}`

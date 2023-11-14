@@ -1,0 +1,61 @@
+extends ../layout
+
+block content
+  .col-sm
+    .p-3.main-header
+      h1 Stage Functions
+      p List of all available functions to use in a pipeline. You can organize your functions in packages.
+      a.btn.btn-secondary(href='/stage/new') Add New
+    .p-3
+      //- ul#stage-list.list-unstyled
+      //-   for prefix, indx in Object.keys(chupim.stages.container).sort()
+      //-     if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
+      //-       li
+      //-         a.text-body(data-toggle='collapse' href=`#package_${indx}` aria-controls=`package_${indx}` role="button" aria-expanded="false")
+              
+      //-           i.fa-regular.fa-folder-open.text-secondary
+      //-           | &nbsp; &nbsp;
+      //-           =prefix
+
+      //-         ul.list-unstyled(id=`package_${indx}`)
+      //-           for stage in Object.keys(chupim.stages.container[prefix]).sort()
+      //-             li.clickable
+      //-               i.fa-regular.fa-file-code
+      //-               | &nbsp; &nbsp;
+      //-               a(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}`)
+      //-                 = `${stage}`
+      //-       li.separator &nbsp;
+
+      if Object.keys(chupim.stages.container).length > 0
+        table.table.table-hover 
+            thead
+              tr
+                th.text-left Name
+                th.text-left Package
+                th.text-left Circuit Breaker
+                th.text-left Actions
+            tbody
+              for prefix, indx in Object.keys(chupim.stages.container).sort()
+                for stage in Object.keys(chupim.stages.container[prefix]).sort()
+                  tr
+                    td=stage
+                    td=prefix
+                    td
+                      if chupim.stages.container[prefix][stage].circuitbreaker
+                        if chupim.stages.container[prefix][stage].circuitbreaker.enabled === true
+                          span.badge.bg-success Enabled
+                        else
+                          span.badge.bg-secondary Disabled
+                        | &nbsp;
+                        span.badge.bg-secondary=`${chupim.stages.container[prefix][stage].circuitbreaker.timeout}ms`
+                      else
+                        span.badge.bg-secondary Not Defined
+                    td
+                      a(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}` title='Edit source Code')
+                        i.fa-regular.fa-file-code
+                      | &nbsp;
+                      a(href=`/errors?key=${encodeURIComponent(prefix)}.${encodeURIComponent(stage)}` title='Error Logs')
+                        i.fa-regular.fa-file-lines
+                      | &nbsp;
+                      a(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}` title='Delete Function')
+                        i.fa-regular.fa-trash-can.text-danger

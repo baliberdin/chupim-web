@@ -1,0 +1,28 @@
+#nav-bar.l-navbar.d-flex.flex-column.flex-shrink-0.text-white.bg-dark
+  nav.nav
+    div
+      a#header-toggle.nav_logo.text-decoration-none.text-white(href='#')
+        i.fa-solid.fa-bars.nav_logo-icon
+        span.fs-4 Chupim
+      .nav_list
+        a.nav_link.active.text-decoration-none.text-white(href='/' title='Resource List')
+          i.fa-solid.fa-diagram-project.nav_icon
+          span.nav_name Resources
+        a.nav_link.text-decoration-none.text-white(href='/stage' title='Functions Editor')
+          i.fa-regular.fa-file-code.nav_icon
+          span.nav_name Functions
+        a.nav_link.text-decoration-none.text-white(href='/metrics' title='Metric Charts')
+          i.fa-solid.fa-chart-simple.nav_icon
+          span.nav_name Metrics
+        a.nav_link.text-decoration-none.text-white(href='/errors' title='Error Logs')
+          i.fa-regular.fa-file-lines.nav_icon
+          span.nav_name Errors
+        a.nav_link.text-decoration-none.text-white(href='#' title='Documentation')
+          i.fa-solid.fa-book.nav_icon
+          span.nav_name Doc
+        a.nav_link.text-decoration-none.text-white(href='#' title='About Chupim')
+          i.fa-solid.fa-circle-info.nav_icon
+          span.nav_name About
+    a.nav_link.text-decoration-none.text-white(href='#' title='Logout')
+      i.fa-solid.fa-arrow-right-from-bracket.nav_icon
+      span.nav_name SignOut

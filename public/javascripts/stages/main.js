@@ -34,7 +34,10 @@ $(document).ready(function(){
 });
 
 function showSaveModal(){
-  $('#stage-save-modal').modal({});
+  //$('#stage-save-modal').modal({});
+
+  new bootstrap.Modal('#stage-save-modal', {}).show();
+
   $('#stage-save-form input[name=source]').val(editor.getValue());
 
   // circuit breaker
@@ -55,6 +58,7 @@ var editor = ace.edit("stage-source");
 editor.setTheme("ace/theme/dracula");
 editor.session.setMode("ace/mode/javascript");
 editor.setFontSize(20);
+editor.session.setTabSize(2);
 
 editor.commands.addCommand({
   name: 'saveStage',

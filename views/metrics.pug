@@ -5,41 +5,42 @@ block scripts
   script(src='/javascripts/main.js')
   script(src='/javascripts/charts.js')
 
-block navigator
-  include includes/navigator
+//- block navigator
+//-   include includes/navigator
 
 block content
-  .row.scrollable.full-height
-    .col-2.right-shadow
-      br
-      h2 Metrics
-      p Select elements below to see real-time monitoring charts. The Elements are divided by API and stages. Stages time chart helps to see which stage inside an API is performing out or not and how fast it is
+  .col-sm
+    .p-3.main-header
+      h1 Metrics
+      p Select elements below to see real-time monitoring charts. The Elements are divided by API and Stages. Stages time chart helps to see which stage inside an API is performing out or not and how fast it is
 
-      br
-      h3 Resources
-      ul.list-unstyled
-        li
-        for sc in Object.keys(chupim.components).sort((a,b) => {if (chupim.components[a].name < chupim.components[b].name)return -1;if (chupim.components[a].name > chupim.components[b].name)return 1;return 0;})
-          li.clickable.metrics-toggle(href='#' data-key=`/api/${sc}`)
-            i.fas.fa-eye-slash.text-secondary
-            | &nbsp;
-            = chupim.components[sc].name
-      br
-      h3 Stages
-      ul.list-unstyled
-        for prefix in Object.keys(chupim.stages.container).sort()
-          if(prefix != 'register' && prefix != 'join')
+    .container-fluid.flex-shrink-1
+      .flex-wrap.d-flex.full-height.flex-column
+        .col-2.right-shadow.scrolly.p-3.full-height
+          br
+          h3 Resources
+          ul.list-unstyled
             li
-              h4.stage-prefix
-                i.fas.fa-cubes.text-info
+            for sc in Object.keys(chupim.components).sort((a,b) => {if (chupim.components[a].name < chupim.components[b].name)return -1;if (chupim.components[a].name > chupim.components[b].name)return 1;return 0;})
+              li.clickable.metrics-toggle(href='#' data-key=`/api/${sc}`)
+                i.fas.fa-eye-slash.text-secondary
                 | &nbsp;
-                = prefix
-              for stage in Object.keys(chupim.stages.container[prefix]).sort()
-                li.clickable.metrics-toggle(href='#' data-key=`${prefix}.${stage}` data-chart-type='stage')
-                  i.fas.fa-eye-slash.text-secondary(title='Visible/Invisible')
-                  | &nbsp;
-                  = stage
-            li.separator &nbsp;
+                = chupim.components[sc].name
+          br
+          h3 Stages
+          ul.list-unstyled
+            for prefix in Object.keys(chupim.stages.container).sort()
+              if(prefix != 'register' && prefix != 'join')
+                li
+                  h4.stage-prefix
+                    i.fas.fa-cubes.text-info
+                    | &nbsp;
+                    = prefix
+                  for stage in Object.keys(chupim.stages.container[prefix]).sort()
+                    li.clickable.metrics-toggle(href='#' data-key=`${prefix}.${stage}` data-chart-type='stage')
+                      i.fas.fa-eye-slash.text-secondary(title='Visible/Invisible')
+                      | &nbsp;
+                      = stage
+                li.separator &nbsp;
 
-    .col-10#chart-container
-      br
+        .col-10#chart-container.scrolly

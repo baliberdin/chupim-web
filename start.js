@@ -23,4 +23,7 @@ let chupim = require('./index');
  * process.env['CHUPIM_EXAMPLES'] = 1;
  **/
 
+ // process.env['CHUPIM_ENV'] = 'production'
+ process.env['CHUPIM_EXAMPLES'] = 1
+
 chupim.start();

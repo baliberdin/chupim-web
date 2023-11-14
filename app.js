@@ -30,6 +30,7 @@ app.use(compression());
 
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
+var bffRouter = require('./routes/bff');
 var errorsRouter = require('./routes/errors');
 
 // view engine setup
@@ -44,6 +45,7 @@ app.use(filter.environment);
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/app', bffRouter);
 app.use('/errors', errorsRouter);
 
 //catch 404 and forward to error handler
