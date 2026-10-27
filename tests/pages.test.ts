@@ -179,6 +179,24 @@ describe('stages', () => {
     expect(api.body.say).toBe('Hello World!');
   });
 
+  test('POST /stage source can use require', async () => {
+    await request(app).post('/stage').type('form').send({
+      prefix: 'Tests',
+      name: 'withRequire',
+      source: 'async (c) => { c.base = require("path").basename("/a/b.txt"); return c; }',
+      'circuitBreaker.enabled': 'false',
+    });
+
+    await request(app).post('/pipeline').type('form').send({
+      path: 'v1/require', name: 'Require', stages: JSON.stringify(['Tests.withRequire']),
+      elements: JSON.stringify({nodes: [], edges: []}), methods: ['GET'], enabled: 'true',
+    });
+
+    const api = await request(app).get('/api/v1/require');
+    expect(api.status).toBe(200);
+    expect(api.body.base).toBe('b.txt');
+  });
+
   test('GET /stage/:prefix/:name renders the stage editor', async () => {
     const res = await request(app).get('/stage/Hello World/sayHello');
     expect(res.status).toBe(200);
