@@ -36,11 +36,20 @@ describe('pages', () => {
 });
 
 describe('pipelines', () => {
-  // Known bug: JSON.parse(undefined) throws before the validation (500)
-  test.fails('POST /pipeline without required fields redirects back to editor', async () => {
+  test('POST /pipeline without required fields redirects back to editor', async () => {
     const res = await request(app).post('/pipeline').type('form').send({name: 'Incomplete'});
     expect(res.status).toBe(302);
     expect(res.headers.location).toBe('/pipeline/new');
+  });
+
+  test('POST /pipeline with invalid stages redirects back to editor', async () => {
+    const res = await request(app).post('/pipeline').type('form').send({
+      path: 'v1/invalid', name: 'Invalid', stages: 'not json',
+      elements: JSON.stringify({nodes: [], edges: []}), methods: ['GET'], enabled: 'true',
+    });
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe('/pipeline/new');
+    expect((await request(app).get('/api/v1/invalid')).status).toBe(404);
   });
 
   test('POST /pipeline registers a component', async () => {

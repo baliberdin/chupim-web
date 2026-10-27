@@ -55,12 +55,17 @@ router.get('/pipeline/new', function(req, res, next) {
 
 /* Create new chupim entry for a pipeline */
 router.post('/pipeline', function(req, res, next) {
-	var stages = eval(req.body.stages);
 	var path = req.body.path;
-  var elements = JSON.parse(req.body.elements);
 	var name = req.body.name;
 	var methods = req.body.methods;
 	var enabled = (req.body.enabled == 'true');
+	var stages, elements;
+
+	// Missing or invalid fields are handled below by redirecting back to the editor
+	try {
+		stages = JSON.parse(req.body.stages);
+		elements = JSON.parse(req.body.elements);
+	} catch(e) {}
 
   if(stages == undefined || path == undefined || name == undefined || elements == undefined){
     res.redirect("/pipeline/new");  
