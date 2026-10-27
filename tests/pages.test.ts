@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import request from 'supertest';
-import app from '../app';
+import app from '../src/app';
 
 describe('pages', () => {
   test.each(['/', '/metrics', '/pipeline/new', '/stage/new', '/errors'])('GET %s renders a page', async (path) => {

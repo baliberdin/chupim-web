@@ -12,27 +12,16 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
-const chupim = require('chupim');
-let ascii =
-`
-     ________                _              
-    / ____/ /_  __  ______  (_)___ ___      
-   / /   / __ \\/ / / / __ \\/ / __ \`__ \\ 
-  / /___/ / / / /_/ / /_/ / / / / / / /     
-  \\____/_/ /_/\\__,_/ .___/_/_/ /_/ /_/    
-                  /_/                       
 
-`;
+import { start } from './index';
 
-console.log(ascii);
+/**
+ *   Overriding the examples environment variable to show default stages and pipelines, 
+ * for who's starting Chupim from the root of the repository
+ * process.env['CHUPIM_EXAMPLES'] = 1;
+ **/
 
-chupim.start = function(){
-  require('./bin/www');
-  let app = require('./app');
-  console.log(`Chupim started and listening on port[${app.get('port')}]\n`);
-}
-
-module.exports = chupim;
+start();

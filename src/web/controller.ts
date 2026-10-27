@@ -12,16 +12,18 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
 
-const chupim = require("chupim");
-const errors = require("./errors");
+import type { NextFunction, Request, Response } from 'express';
+import * as chupim from 'chupim';
+import errors from './errors';
+import type { WebContext } from './types';
 
-module.exports = {
-  createContextFromRequest: function(req) {
-    var context = chupim.createContext();
+const controller = {
+  createContextFromRequest: function(req: Request<{splat: string[]}>): WebContext {
+    var context = chupim.createContext() as WebContext;
     var query = {};
     Object.assign(query, req.query);
     context._chupim_.method = req.method;
@@ -41,8 +43,8 @@ module.exports = {
     return context;
   },
 
-  doRequest: function(req, res, next) {
-    let totalTime = new Date();
+  doRequest: function(req: Request<{splat: string[]}>, res: Response, next: NextFunction) {
+    let startTime = new Date();
     let context = this.createContextFromRequest(req);
     if (!context._chupim_.requestedComponent) {
       return errors.notFound(res);
@@ -67,30 +69,30 @@ module.exports = {
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.send(response);
           } else {
-            return errors.addComponentError(totalTime, res, componentKey, {
+            return errors.addComponentError(startTime, res, componentKey, {
               message: "Invalid pipeline result."
             });
           }
 
-          totalTime = new Date() - totalTime;
+          let totalTime = new Date().getTime() - startTime.getTime();
           chupim.metrics.addMetric(componentKey, totalTime);
         })
         .catch( e => {
-          return errors.addComponentError(totalTime, res, componentKey, e);
+          return errors.addComponentError(startTime, res, componentKey, e);
         });
     } else {
       return errors.notFound(res);
     }
   },
 
-  listResources: function(req, res, next){
+  listResources: function(req: Request, res: Response, next: NextFunction): void {
     let host = req.headers['host'];
     res.setHeader('Content-Type','application/json');
     res.setHeader("Access-Control-Allow-Origin", "*");
     
     var resources = {
         title:"Chupim Resources",
-        resources: [],
+        resources: [] as Array<{name?: string, uri: string, link: string, state: string}>,
         links: {
           self:`http://${host}/api`
         }
@@ -111,3 +113,5 @@ module.exports = {
 
 
 };
+
+export default controller;

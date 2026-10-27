@@ -12,28 +12,23 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
-var express = require('express');
+
+import express from 'express';
+import * as chupim from 'chupim';
+
 var router = express.Router();
-const chupim = require('chupim');
-//const errors = require('../web/errors');
 
 router.get('/', function(req, res, next) {
-  let key = req.query.key;
-  let keys = [];
+  let key = req.query.key as string | undefined;
+  let keys: string[] = [];
   let logs;
 
   keys = chupim.errors.loggedKeys();
-  // errors.errorsLog.forEach( e => {
-  //   if(!keys.includes(e.key)){
-  //     keys.push(e.key);
-  //   }
-  // });
   
   if(key){
-    //logs = errors.errorsLog.filter(e => e.key == key);
     logs = chupim.errors.filteredByKey(key);
   }else{
     logs = chupim.errors.errorsLog;
@@ -61,7 +56,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/api', function(req, res, next) {
-  let key = req.query.key;
+  let key = req.query.key as string | undefined;
   res.setHeader('Content-Type', 'application/json');
   if(key){
     res.send({errors:chupim.errors.filteredByKey(key)});
@@ -71,4 +66,4 @@ router.get('/api', function(req, res, next) {
 	
 });
 
-module.exports = router;
+export default router;

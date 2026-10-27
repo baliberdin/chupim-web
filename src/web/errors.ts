@@ -12,28 +12,30 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
-var createError = require('http-errors');
-const chupim = require('chupim');
 
-module.exports = {
+import createError from 'http-errors';
+import type { Response } from 'express';
+import * as chupim from 'chupim';
+
+const errors = {
 
   unloggedErrors: [
     createError.Unauthorized, 
     createError.NotFound,
     createError.MethodNotAllowed,
     createError.Forbidden
-  ],
+  ] as Function[],
 
-  addComponentError: function(totalTime, res, key, error) {
+  addComponentError: function(startTime: Date, res: Response, key: string, error: any): void {
     if(!this.unloggedErrors.includes(error.constructor)){ 
       chupim.errors.addError(key,error);
       chupim.metrics.addError(key);
     }
 
-    totalTime = new Date() - totalTime;
+    let totalTime = new Date().getTime() - startTime.getTime();
     chupim.metrics.addMetric(key, totalTime);
 
     if(error.status){
@@ -43,18 +45,20 @@ module.exports = {
     }
   },
 
-  notFound: (res) => {
+  notFound: (res: Response): void => {
     let error = createError(404,"Resource not found.");
     res.status(error.statusCode).send(error);
   },
 
-  methodNotAllowed: (res) => {
+  methodNotAllowed: (res: Response): void => {
     let error = createError(405,"Method not allowed.");
     res.status(error.statusCode).send(error);
   },
 
-  serviceUnavailable: (res) => {
+  serviceUnavailable: (res: Response): void => {
     let error = createError(503,"Service is unavailable.");
     res.status(error.statusCode).send(error);
   }
 }
+
+export default errors;

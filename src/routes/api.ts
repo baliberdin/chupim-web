@@ -12,13 +12,14 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
-var express = require('express');
+
+import express from 'express';
+import controller from '../web/controller';
+
 var router = express.Router();
-const controller = require('../web/controller');
-const chupim = require('chupim');
 
 router.get('/', function(req, res, next) {
     controller.listResources(req, res, next);
@@ -51,4 +52,4 @@ router.options('/*splat', function(req, res, next) {
 
 
 
-module.exports = router;
+export default router;

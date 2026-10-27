@@ -12,15 +12,23 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
-let chupim = require('./index');
 
-/**
- *   Overriding the examples environment variable to show default stages and pipelines, 
- * for who's starting Chupim from the root of the repository
- * process.env['CHUPIM_EXAMPLES'] = 1;
- **/
+import type { IncomingHttpHeaders } from 'http';
+import type { ChupimMetadata, Component, Context } from 'chupim';
 
-chupim.start();
+// Request information added by chupim-web to the pipeline context
+export interface RequestInfo {
+  method: string;
+  query: Record<string, unknown>;
+  headers: IncomingHttpHeaders;
+  path: string;
+  requestedComponent?: Component;
+  body?: unknown;
+}
+
+export interface WebContext extends Context {
+  _chupim_: ChupimMetadata & RequestInfo;
+}

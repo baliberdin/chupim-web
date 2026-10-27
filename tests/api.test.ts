@@ -1,8 +1,8 @@
 import { describe, test, expect } from 'vitest';
 import request from 'supertest';
-import app from '../app';
+import app from '../src/app';
 
-const chupim = require('chupim');
+import * as chupim from 'chupim';
 
 chupim.registerStage({
   prefix: 'ApiTests',

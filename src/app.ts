@@ -12,34 +12,35 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var compression = require('compression');
-var filter = require('./web/filter');
 
-const chupim = require('chupim');
+import createError from 'http-errors';
+import express from 'express';
+import type { NextFunction, Request, Response } from 'express';
+import path from 'path';
+import logger from 'morgan';
+import compression from 'compression';
+import * as chupim from 'chupim';
+import filter from './web/filter';
+import { registerExamples } from './web/default';
+import indexRouter from './routes/index';
+import apiRouter from './routes/api';
+import errorsRouter from './routes/errors';
 
 var app = express();
 app.use(compression());
 
-var indexRouter = require('./routes/index');
-var apiRouter = require('./routes/api');
-var errorsRouter = require('./routes/errors');
-
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(filter.environment);
 
 app.use('/', indexRouter);
@@ -58,7 +59,7 @@ if(process.env['CHUPIM_ENV'] == undefined || process.env['CHUPIM_ENV'] !== 'prod
 }
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err: any, req: Request, res: Response, next: NextFunction) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -76,9 +77,9 @@ app.use(function(err, req, res, next) {
 
 chupim.metrics.startDataUpdater();
  
-if(process.env['CHUPIM_EXAMPLES'] == 1){
+if(process.env['CHUPIM_EXAMPLES'] == '1'){
   console.info("Loading example project: Stages and Pipelines for testing purpose. Set CHUPIM_EXAMPLES=0 to disable.");
-  require('./web/default');
+  registerExamples();
 }
 
-module.exports = app;
+export default app;
