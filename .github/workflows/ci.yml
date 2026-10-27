@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      # chupim is a local dependency (file:../chupim) until 0.2.0 is published on npm
+      - name: Build chupim lib
+        run: |
+          git clone --depth 1 https://github.com/baliberdin/chupim.git ../chupim
+          cd ../chupim && npm ci && npm run build
+      - run: make install
+      - run: make test
+      - run: make build
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Checkout chupim lib
+        run: git clone --depth 1 https://github.com/baliberdin/chupim.git ../chupim
+      - run: make docker-build

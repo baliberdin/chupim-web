@@ -49,5 +49,10 @@
   "types": "dist/index.d.ts",
   "engines": {
     "node": ">=22"
-  }
+  },
+  "files": [
+    "dist",
+    "views",
+    "public"
+  ]
 }

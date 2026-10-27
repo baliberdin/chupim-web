@@ -16,7 +16,7 @@ npm init
 npm install -s chupim-web
 ```
 
-Create a new `index.js` file like this
+Create a new `index.js` file like this (or `index.ts`: chupim-web ships its type definitions)
 ```javascript
 // index.js
 const chupim = require('chupim-web');
@@ -34,3 +34,15 @@ node index.js
 [http://localhost:3000](http://localhost:3000)
 
 [Complete Documentation](https://baliberdin.github.io/chupim-web/)
+
+## Development
+Node version is pinned in `.tool-versions` (asdf). While chupim 0.2.0 is not
+published on npm, the [chupim](https://github.com/baliberdin/chupim) repository
+must be cloned and built next to this one (`../chupim`).
+
+```shell
+make install       # npm ci
+make test          # typecheck + vitest
+make run           # build and start with the examples on http://localhost:3000
+make docker-up     # same, with Docker Compose
+```
