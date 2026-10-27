@@ -1,0 +1,14 @@
+//- Confirmation dialog used by client/lib/ui.ts confirmAction()
+dialog#confirm-dialog(class="m-auto w-full max-w-md rounded-xl p-0 shadow-xl")
+  form(method="dialog" class="p-6")
+    div(class="flex gap-4")
+      span(class="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600")!= icon('triangle-alert', 'size-5')
+      div
+        h2#confirm-dialog-title(class="text-base font-semibold text-zinc-900") Are you sure?
+        p#confirm-dialog-message(class="mt-1 text-sm text-zinc-600")
+    div(class="mt-6 flex justify-end gap-2")
+      button(value="cancel" class="btn btn-secondary") Cancel
+      button#confirm-dialog-confirm(value="confirm" class="btn btn-danger") Confirm
+
+//- Toast notifications, see client/lib/ui.ts toast()
+div#toasts(class="pointer-events-none fixed right-4 bottom-4 z-50 flex w-80 flex-col gap-2" aria-live="polite")

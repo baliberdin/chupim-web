@@ -18,3 +18,11 @@ test('GET /errors lists newest first without reordering the error log', async ()
   // The log is evicted from the start, so it must stay ordered from oldest to newest
   expect(keys()).toEqual(['ErrorsTests.first', 'ErrorsTests.second']);
 });
+
+test('GET /errors/api includes the message and stack of Error instances', async () => {
+  chupim.errors.addError('ErrorsTests.api', new Error('errors-test-api-message'));
+
+  const res = await request(app).get('/errors/api').query({key: 'ErrorsTests.api'});
+  expect(res.body.errors[0].error.message).toBe('errors-test-api-message');
+  expect(res.body.errors[0].error.stack).toContain('errors-test-api-message');
+});

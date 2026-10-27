@@ -1,0 +1,25 @@
+- const navItems = [{href: '/', label: 'Resources', icon: 'workflow'}, {href: '/metrics', label: 'Metrics', icon: 'chart-line'}, {href: '/errors', label: 'Errors', icon: 'triangle-alert'}]
+
+header(class="flex h-14 shrink-0 items-center gap-6 border-b border-zinc-200 bg-white px-4 sm:px-6")
+  a(href="/" class="flex items-center gap-2 font-semibold tracking-tight text-zinc-900")
+    span(class="flex size-8 items-center justify-center rounded-lg bg-brand-600 text-white")!= icon('feather', 'size-4')
+    span(class="hidden sm:inline") Chupim
+
+  nav(class="flex items-center gap-1 text-sm" aria-label="Main")
+    each item in navItems
+      - const active = item.href == '/' ? currentPath == '/' : currentPath.startsWith(item.href)
+      a(href=item.href aria-current=active ? 'page' : undefined class=`flex items-center gap-2 rounded-md px-3 py-1.5 font-medium transition-colors ${active ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`)
+        != icon(item.icon)
+        span(class="hidden md:inline")= item.label
+
+  div(class="ml-auto flex items-center gap-2")
+    if editable
+      span(class="badge hidden bg-amber-50 text-amber-700 ring-1 ring-amber-200 lg:inline-flex" title="Set CHUPIM_ENV=production to disable editing") Development
+      a(href="/stage/new" class="btn btn-secondary")
+        != icon('square-function')
+        span(class="hidden sm:inline") New stage
+      a(href="/pipeline/new" class="btn btn-primary")
+        != icon('plus')
+        span(class="hidden sm:inline") New pipeline
+    else
+      span(class="badge bg-zinc-100 text-zinc-600 ring-1 ring-zinc-200" title="Editing is disabled in production") Production · read-only

@@ -197,6 +197,16 @@ describe('stages', () => {
     expect(api.body.base).toBe('b.txt');
   });
 
+  test('POST /stage with invalid source shows the error and keeps the form values', async () => {
+    const res = await request(app).post('/stage').type('form').send({
+      prefix: 'Tests', name: 'invalid', source: 'async (c) => { return c',
+    });
+    expect(res.status).toBe(400);
+    expect(res.text).toContain('The stage could not be saved');
+    expect(res.text).toContain('value="invalid"');
+    expect((await request(app).get('/stage/Tests/invalid')).status).toBe(404);
+  });
+
   test('GET /stage/:prefix/:name renders the stage editor', async () => {
     const res = await request(app).get('/stage/Hello World/sayHello');
     expect(res.status).toBe(200);

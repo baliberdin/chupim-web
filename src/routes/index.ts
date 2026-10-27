@@ -19,23 +19,42 @@
 import express from 'express';
 import createError from 'http-errors';
 import * as chupim from 'chupim';
-import type { CircuitBreakerAction, StageDefinition, StageList } from 'chupim';
+import type { CircuitBreakerAction, CircuitBreakerConfig, StageDefinition, StageList } from 'chupim';
+import { dedent, resourceRows, stageGroups } from '../web/views';
+
+interface StageDraft {
+	prefix: string;
+	name: string;
+	source: string;
+	circuitbreaker?: CircuitBreakerConfig;
+}
 
 var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	const resources = resourceRows();
+	const groups = stageGroups();
+
 	res.render('index', { 
-  		title: 'Chupim - Pipeline Composer',
-		chupim:chupim
+		title: 'Resources',
+		resources: resources,
+		stageGroups: groups,
+		stats: {
+			resources: resources.length,
+			enabled: resources.filter(r => r.enabled).length,
+			stages: groups.reduce((total, g) => total + g.stages.length, 0),
+			errors: chupim.errors.errorsLog.length,
+		},
 	});
 });
 
 router.get('/metrics', function(req, res, next) {
 	res.render('metrics', { 
-		title: 'Chupim - Pipeline Composer',
-	  chupim:chupim
-  });
+		title: 'Metrics',
+		resources: resourceRows(),
+		stageGroups: stageGroups(),
+	});
 });
 
 router.get('/metrics/api', function(req, res, next) {
@@ -48,8 +67,8 @@ router.get('/metrics/api', function(req, res, next) {
 /* Editor for new Pipeline */
 router.get('/pipeline/new', function(req, res, next) {
 	res.render('pipeline/new', { 
-		title: 'Create New Pipeline',
-        chupim:chupim
+		title: 'New Pipeline',
+		stageGroups: stageGroups(),
 	});
 });
 
@@ -88,7 +107,7 @@ router.get('/pipeline/edit/*splat', function(req, res, next) {
 		res.render('pipeline/new', { 
 			title: 'Edit Pipeline',
 			component:component,
-			chupim:chupim
+			stageGroups: stageGroups(),
 		});
 	}else{
 		res.status(404).send();
@@ -122,33 +141,67 @@ router.get('/pipeline/remove/*splat', function(req, res, next) {
 });
 
 
+const newStageSource = `async (context) => {
+  // context carries the pipeline data from stage to stage.
+  // Request data is in context._chupim_ (method, query, headers, path, body).
+  context.message = "Hello from my stage";
+  return context;
+}`;
+
+/**
+ * Renders the stage editor. The draft holds the values shown on the form,
+ * from an existing stage or from a submission that failed.
+ */
+function renderStageEditor(res: express.Response, draft: StageDraft, options: {editing?: boolean, formError?: string} = {}) {
+	const groups = stageGroups();
+	const ownKey = options.editing ? `${draft.prefix}.${draft.name}` : undefined;
+
+	res.render('stages/new', {
+		title: options.editing ? 'Edit Stage' : 'New Stage',
+		editing: options.editing ?? false,
+		formError: options.formError,
+		draft: draft,
+		prefixes: groups.map(g => g.prefix),
+		fallbackOptions: groups.flatMap(g => g.stages.map(s => `${g.prefix}.${s}`)).filter(k => k != ownKey),
+	});
+}
+
 /* Editor for new Stage */
 router.get('/stage/new', function(req, res, next) {
-	res.render('stages/new', { 
-		title: 'Create New Stage',
-        chupim:chupim
-	});
+	renderStageEditor(res, {prefix: '', name: '', source: newStageSource});
 });
 
 
 /* Create a new Stage from source */
 router.post('/stage', function(req, res, next) {
 	var body = req.body || {};
-	let stage: StageDefinition = {
-		prefix: body.prefix,
-		name: body.name,
+	let draft: StageDraft = {
+		prefix: body.prefix ?? '',
+		name: body.name ?? '',
+		source: body.source ?? '',
 		circuitbreaker: {
 			enabled: body['circuitBreaker.enabled'] == 'true',
 			action: Number(body['circuitBreaker.action']) as CircuitBreakerAction,
 			fn: body['circuitBreaker.fn'],
 			timeout: Number(body['circuitBreaker.timeout']),
 		},
-		// WARNING: Evaluation of an user submitted source. Only for development purpose.
-		// Direct eval on purpose: stage sources can use require.
-		fn: eval(body.source),
 	};
 
-	chupim.registerStage(stage);
+	try {
+		let stage: StageDefinition = {
+			prefix: draft.prefix,
+			name: draft.name,
+			circuitbreaker: draft.circuitbreaker,
+			// WARNING: Evaluation of an user submitted source. Only for development purpose.
+			// Direct eval on purpose: stage sources can use require.
+			fn: eval(draft.source),
+		};
+
+		chupim.registerStage(stage);
+	} catch(e) {
+		res.status(400);
+		return renderStageEditor(res, draft, {editing: body.editing == 'true', formError: (e as Error).message});
+	}
 
 	res.redirect("/");
 });
@@ -162,12 +215,12 @@ router.get('/stage/:prefix/*splat', function(req, res, next) {
 	var stage = chupim.getStageByPackage(prefix, stageName);
 
 	if(stage){
-		res.render('stages/new', { 
-			title: 'Edit Stage',
-			prefix: prefix,
-			stage: stage,
-			chupim: chupim
-		});
+		renderStageEditor(res, {
+			prefix: stage.prefix,
+			name: stage.name,
+			source: dedent(stage.source),
+			circuitbreaker: stage.circuitbreaker,
+		}, {editing: true});
 	}else{
     	next(createError(404));
 	}

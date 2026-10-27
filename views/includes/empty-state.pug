@@ -1,0 +1,10 @@
+//- Usage: +emptyState('workflow', 'No resources yet', 'Description')
+//-          a.btn.btn-primary(...) optional action as block
+mixin emptyState(iconName, heading, description)
+  div(class="flex flex-col items-center px-6 py-14 text-center")
+    span(class="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-400")!= icon(iconName, 'size-6')
+    h3(class="mt-4 text-sm font-semibold text-zinc-900")= heading
+    p(class="mt-1 max-w-sm text-sm text-zinc-500")= description
+    if block
+      div(class="mt-5")
+        block

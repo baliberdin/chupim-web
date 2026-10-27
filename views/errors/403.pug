@@ -1,6 +1,13 @@
 extends ../layout
 
 block content
-  .error-box
-    h1= `${message} (${error.status})`
-    p If you think this should not have happened or that this is wrong, check your environment variables.
+  div(class="mx-auto max-w-xl py-16 text-center")
+    span(class="mx-auto flex size-12 items-center justify-center rounded-full bg-amber-50 text-amber-600")!= icon('ban', 'size-6')
+    h1(class="mt-4 text-2xl font-semibold tracking-tight") Editing is disabled
+    p(class="mt-2 text-sm text-zinc-500")
+      | This server runs with 
+      code(class="rounded bg-zinc-100 px-1 py-0.5 text-xs") CHUPIM_ENV=production
+      | , where pipelines and stages are read-only. If you think this is wrong, check the environment variables.
+    a(href="/" class="btn btn-secondary mt-8")
+      != icon('arrow-left')
+      | Back to resources

@@ -1,128 +1,135 @@
 extends ../layout
 
-block scripts
-  script(src='/javascripts/cytoscape.min.js')
-  script(src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,fetch")
-  script(src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js")
-  script(src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.5.0/cytoscape-dagre.js")
-  script(src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cose-bilkent/1.6.5/cytoscape-cose-bilkent.js")
-  
-  script(src='/javascripts/pipeline-flow.js')
+block main
+  - const methods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS']
+  - const selectedMethods = component ? component.methods : ['GET']
 
-block navigator
-  include navigator
-
-block content
-  if component
-    input#edit-component(type='hidden' value=component.elements)
-  #pipeline-save-modal.modal(tabindex="-1" role="dialog")
-    .modal-dialog(role="document")
-      .modal-content
-        .modal-header
-          h5.modal-title Save New Pipeline
-          button.close(type="button" data-dismiss="modal" aria-label="Close")
-            span(aria-hidden="true") ×
-        .modal-body
-          form#pipeline-save-form.form.needs-validation(name="newPipelineForm" action='/pipeline/' method='post'  novalidate)
-            .form-group
-              input.form-control(type='hidden' name='stages' required)
-              input.form-control(type='hidden' name='enabled' required value=`${component != undefined? component.enabled: false}`)
-              .invalid-feedback The pipeline has no stage
-            .form-group
-              input.form-control(type='hidden' name='elements' required)
-              .invalid-feedback Something went wrong, try later.
-            .form-group
-              label Resource Name
-              input#pipeline-resource-name.form-control(placeholder='Products from store' name='name' value=component != undefined ? component.name : "" required)
-              .invalid-feedback This field could not be empty
-            .form-group
-              label API Path: /api/{path}
-              input#pipeline-api-path.form-control(placeholder='v1/example' name='path' value=component != undefined ? component.id : "" required)
-              .invalid-feedback This field could not be empty
-            .form-group
-              label HTTP Methods
-              div
-                .form-check.form-check-inline
-                  if component && component.methods.includes('GET')
-                    input.form-check-input(type='checkbox' name='methods' value='GET' checked)
-                  else
-                    input.form-check-input(type='checkbox' name='methods' value='GET')
-                  label.form-check-label GET
-                .form-check.form-check-inline
-                  if component && component.methods.includes('POST')
-                    input.form-check-input(type='checkbox' name='methods' value='POST' checked)
-                  else
-                    input.form-check-input(type='checkbox' name='methods' value='POST')
-                  label.form-check-label POST
-                .form-check.form-check-inline
-                  if component && component.methods.includes('DELETE')
-                    input.form-check-input(type='checkbox' name='methods' value='DELETE' checked)
-                  else
-                    input.form-check-input(type='checkbox' name='methods' value='DELETE')
-                  label.form-check-label DELETE
-                .form-check.form-check-inline
-                  if component && component.methods.includes('PUT')
-                    input.form-check-input(type='checkbox' name='methods' value='PUT' checked)
-                  else
-                    input.form-check-input(type='checkbox' name='methods' value='PUT')
-                  label.form-check-label PUT
-                .form-check.form-check-inline
-                  if component && component.methods.includes('HEAD')
-                    input.form-check-input(type='checkbox' name='methods' value='HEAD' checked)
-                  else
-                    input.form-check-input(type='checkbox' name='methods' value='HEAD')
-                  label.form-check-label HEAD
-                .form-check.form-check-inline
-                  if component && component.methods.includes('OPTIONS')
-                    input.form-check-input(type='checkbox' name='methods' value='OPTIONS' checked)
-                  else
-                    input.form-check-input(type='checkbox' name='methods' value='OPTIONS')
-                  label.form-check-label OPTIONS
-                
-
-              
-        .modal-footer
-          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
-          button.btn.btn-primary(type="submit" form="pipeline-save-form") Save changes
-
-
-  .row.full-height
-    .col-2.full-height.right-shadow.scrolly
-      br
-      #left-menu.full-height
-        h2 How to Use
-        ul.help
-          li Click on item to add to graph
-          li Delete: [Backspace]
-          li Hold Ctrl + Left Click to link itens
-          li Zoom: [Mouse Scroll]
-        
-        br
-        h3 Stages
-        ul#stage-list.list-unstyled
-          for prefix in Object.keys(chupim.stages.container).sort()
-            if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
-              h5.stage-prefix
-                i.fas.fa-cubes.text-info
-                  | &nbsp;
-                = `${prefix}`
-              each s in Object.keys(chupim.stages.container[prefix])
-                li.stages.clickable(data-name=s data-type=prefix)
-                  //i.fas.fa-cube.text-danger
-                  img(src='/images/fx2.svg')
-                  | &nbsp;
-                  = s
-              li.separator &nbsp;
-
-    .col.full-height
-      br
-      div
-        if component != undefined
-          h2=`${component.name}`
-          p=`${component.id}`
-            br
+  main(class="flex min-h-0 flex-1")
+    aside(class="flex w-72 shrink-0 flex-col border-r border-zinc-200 bg-white")
+      div(class="border-b border-zinc-200 p-4")
+        a(href="/" class="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900")
+          != icon('arrow-left', 'size-3')
+          | Resources
+        h1(class="mt-2 truncate text-lg font-semibold tracking-tight")= component ? component.name : 'New Pipeline'
+        if component
+          div(class="mt-1 flex items-center gap-2")
+            code(class="truncate font-mono text-xs text-zinc-500")= `/api/${component.id}`
             if component.enabled
-              span.badge.badge-success Enabled
+              span(class="badge bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200") Enabled
             else
-              span.badge.badge-secondary Disabled
-      #workspace(width="100%" height="800px")
+              span(class="badge bg-zinc-100 text-zinc-600") Disabled
+        span(class="sr-only")= component ? 'Edit Pipeline' : 'New Pipeline'
+
+      if editable
+        div(class="p-3")
+          label(class="relative block")
+            span(class="sr-only") Search stages
+            span(class="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-zinc-400")!= icon('search')
+            input(type="search" class="input pl-8" placeholder="Search stages" data-stage-search)
+
+        nav(class="min-h-0 flex-1 overflow-y-auto px-3 pb-3" aria-label="Stages")
+          p(class="px-2 pb-2 text-xs text-zinc-500") Click a stage to add it. With a node selected, the stage is inserted right after it.
+          each g in stageGroups
+            div(class="mt-2 first:mt-0" data-stage-group)
+              div(class="flex items-center gap-2 px-2 py-1 text-xs font-semibold tracking-wide text-zinc-500 uppercase")
+                span(class="size-2 rounded-full" style=`background:${prefixColor(g.prefix)}`)
+                = g.prefix
+              ul
+                each s in g.stages
+                  li(data-stage-item data-search=`${g.prefix} ${s}`.toLowerCase())
+                    button(type="button" class="group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900" data-add-stage=`${g.prefix}.${s}` data-prefix=g.prefix data-name=s data-color=prefixColor(g.prefix))
+                      != icon('square-function', 'size-4 text-zinc-400')
+                      span(class="truncate")= s
+                      != icon('plus', 'ml-auto size-4 text-zinc-400 opacity-0 group-hover:opacity-100')
+          if stageGroups.length == 0
+            p(class="px-2 py-6 text-center text-sm text-zinc-500")
+              | No stages yet. 
+              a(href="/stage/new" class="text-brand-700 hover:underline") Create one
+          p(class="hidden px-2 py-6 text-center text-sm text-zinc-500" data-stage-empty) No stages found.
+
+        div(class="space-y-1.5 border-t border-zinc-200 p-4 text-xs text-zinc-500")
+          p(class="font-medium text-zinc-700") Shortcuts
+          p(class="flex justify-between") Connect nodes
+            span Drag the 
+              span(class="inline-block size-2.5 rounded-full bg-brand-600 align-middle")
+              |  handle
+          p(class="flex justify-between") Delete selection
+            kbd(class="kbd") Del
+          p(class="flex justify-between") Select many
+            span
+              kbd(class="kbd") Shift
+              |  + click
+          p(class="flex justify-between") Save
+            span
+              kbd(class="kbd") Ctrl
+              |  + 
+              kbd(class="kbd") S
+      else
+        p(class="p-4 text-sm text-zinc-500") Editing is disabled in production.
+
+    section(class="relative min-w-0 flex-1 bg-zinc-50 bg-[radial-gradient(var(--color-zinc-300)_1px,transparent_1px)] [background-size:20px_20px]")
+      div#canvas(class="size-full" aria-label="Pipeline graph" role="application")
+
+      div(class="pointer-events-none absolute inset-x-3 top-3 flex items-start gap-2")
+        div(class="card pointer-events-auto flex items-center gap-1 p-1")
+          if editable
+            button(type="button" class="btn btn-primary py-1.5" data-action="save")
+              != icon('save')
+              | Save
+            span(class="mx-1 h-6 w-px bg-zinc-200")
+          button(type="button" class="btn-icon" title="Auto layout" aria-label="Auto layout" data-action="layout")!= icon('network')
+          button(type="button" class="btn-icon" title="Fit to screen" aria-label="Fit to screen" data-action="fit")!= icon('scan')
+          if editable
+            button(type="button" class="btn-icon hover:bg-red-50 hover:text-red-600" title="Delete selection (Del)" aria-label="Delete selection" data-action="delete" disabled)!= icon('trash-2')
+
+        div(class="card pointer-events-auto ml-auto flex max-w-md items-start gap-2 px-3 py-2 text-sm" role="status" data-status)
+
+      div(class="absolute z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 cursor-crosshair rounded-full border-2 border-white bg-brand-600 shadow ring-1 ring-brand-600/30 hover:scale-125" hidden data-edge-handle title="Drag to connect")
+
+  script#pipeline-elements(type="application/json")!= jsonForScript(component ? component.elements : null)
+
+  if editable
+    dialog#save-dialog(class="m-auto w-full max-w-lg rounded-xl p-0 shadow-xl")
+      form#pipeline-form(method="post" action="/pipeline" novalidate)
+        input(type="hidden" name="stages")
+        input(type="hidden" name="elements")
+        div(class="border-b border-zinc-200 px-6 py-4")
+          h2(class="text-base font-semibold")= component ? 'Save pipeline' : 'Save new pipeline'
+          p(class="mt-1 text-sm text-zinc-500") The pipeline is published as an HTTP endpoint.
+        div(class="space-y-4 px-6 py-5")
+          div
+            label(class="label" for="pipeline-name") Name
+            input#pipeline-name(class="input" name="name" value=component ? component.name : '' placeholder="e.g. Products from store" required autocomplete="off")
+            p(class="field-error" data-error-for="pipeline-name") Name is required.
+          div
+            label(class="label" for="pipeline-path") Endpoint
+            div(class="flex rounded-md shadow-xs")
+              span(class="inline-flex items-center rounded-l-md border border-r-0 border-zinc-300 bg-zinc-50 px-3 font-mono text-sm text-zinc-500") /api/
+              input#pipeline-path(class="input rounded-l-none font-mono shadow-none" name="path" value=component ? component.id : '' placeholder="v1/products" required autocomplete="off")
+            p(class="field-error" data-error-for="pipeline-path") Use letters, numbers, - _ . and / (e.g. v1/products).
+            if component
+              p(class="hint") Changing the endpoint creates a new resource and keeps the current one.
+          fieldset
+            legend(class="label") HTTP methods
+            div#pipeline-methods(class="flex flex-wrap gap-2")
+              each m in methods
+                label(class="cursor-pointer")
+                  input(type="checkbox" class="peer sr-only" name="methods" value=m checked=selectedMethods.includes(m))
+                  span(class="inline-flex rounded-md border border-zinc-300 px-2.5 py-1 font-mono text-xs text-zinc-600 peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 peer-focus-visible:outline-2 peer-focus-visible:outline-brand-500")= m
+            p(class="field-error" data-error-for="pipeline-methods") Select at least one method.
+          label(class="flex items-center justify-between gap-4")
+            span
+              span(class="block text-sm font-medium text-zinc-700") Enabled
+              span(class="block text-xs text-zinc-500") Disabled resources answer 503 Service Unavailable.
+            input(type="checkbox" class="switch" name="enabled" value="true" checked=component ? component.enabled : true)
+          details(class="group")
+            summary(class="flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 [&::-webkit-details-marker]:hidden")
+              != icon('chevron-right', 'size-3.5 transition-transform group-open:rotate-90')
+              | Stage arrangement
+            pre(class="mt-2 max-h-48 overflow-auto rounded-md bg-zinc-950 p-3 font-mono text-xs text-zinc-100" data-stages-preview)
+        div(class="flex justify-end gap-2 border-t border-zinc-200 bg-zinc-50 px-6 py-4")
+          button(type="button" class="btn btn-secondary" data-action="cancel-save") Cancel
+          button(type="submit" class="btn btn-primary") Save pipeline
+
+block scripts
+  script(type="module" src="/build/pipeline-editor.js")

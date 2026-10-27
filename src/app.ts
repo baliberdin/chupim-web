@@ -25,6 +25,7 @@ import logger from 'morgan';
 import compression from 'compression';
 import * as chupim from 'chupim';
 import filter from './web/filter';
+import { icon, jsonForScript, prefixColor, viewLocals } from './web/views';
 import { registerExamples } from './web/default';
 import indexRouter from './routes/index';
 import apiRouter from './routes/api';
@@ -36,11 +37,15 @@ app.use(compression());
 // view engine setup
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'pug');
+app.locals.icon = icon;
+app.locals.prefixColor = prefixColor;
+app.locals.jsonForScript = jsonForScript;
 
 app.use(logger('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(viewLocals);
 app.use(filter.environment);
 
 app.use('/', indexRouter);

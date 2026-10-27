@@ -1,58 +1,55 @@
 extends layout
-
-block scripts
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js')
-  script(src='/javascripts/errorlog.js')
-
-block navigator
-  include includes/navigator
+include includes/empty-state
 
 block content
-  .row.scrollable.full-height
-    .col-2.right-shadow
-      br
-      h2 Error logs
-      p Here are the error logs that happened on the last minutes.
+  div(class="flex flex-wrap items-end justify-between gap-4")
+    div
+      h1(class="text-2xl font-semibold tracking-tight") Errors
+      p(class="mt-1 text-sm text-zinc-500") Errors thrown by stages and resources, newest first.
 
-      br
-      h3 Filters
-      .form-group
-        label Resource
-        select#logkeylist.form-control
-          option(value="") All
-          for r in keys
-            if key==r
-              option(selected value=r)= r
-            else
-              option(value=r)= r
-    
-    .col-10
-      br
-      br
-      if logs.length > 0
-        table.table.table-sm.table-hover.table-borderless.table-striped
-            thead
-              tr
-                th.text-left Resource
-                th.text-left Date
-                th.text-left Time
-                th.text-left Status
-                th.text-left Message
-                th.text-left Stack
-            tbody
-              for l in logs
-                tr
-                  td.text-left
-                    span.badge.badge-warning
-                      i.fas.fa-exclamation-triangle
-                      = ` ${l.key}`
-                  td.text-left.small
-                    div= l.date.toLocaleDateString()
-                  td.text-left.small
-                    div= l.date.toLocaleTimeString()
-                  td.text-left
-                    span.badge.badge-danger= l.error.status
-                  td.text-left.text-danger= l.error.message
-                  td.text-left(title=l.error.stack)= `${l.error.stack?l.error.stack.substr(0,100):''}...`
+    form(method="get" action="/errors" class="flex items-end gap-2" data-errors-filter)
+      label
+        span(class="label") Source
+        select(name="key" class="input min-w-56" data-autosubmit)
+          option(value="") All sources
+          each k in keys
+            option(value=k selected=key == k)= k
+      noscript
+        button(type="submit" class="btn btn-secondary") Filter
+
+  section(class="card mt-6 overflow-hidden")
+    if logs.length == 0
+      if key
+        +emptyState('circle-check', 'No errors for this source', `Nothing was logged for ${key}.`)
+          a(href="/errors" class="btn btn-secondary") Show all sources
       else
-        p= `There is no error logs to show${key==undefined?".":" for component: "+key}`
+        +emptyState('circle-check', 'No errors logged', 'Errors thrown by stages and resources will show up here.')
+    else
+      div(class="flex items-center justify-between border-b border-zinc-200 px-4 py-3 text-sm text-zinc-500")
+        span
+          strong(class="font-semibold text-zinc-900")= logs.length
+          = logs.length == 1 ? ' error' : ' errors'
+        span Click an error to see its stack trace
+      ul(class="divide-y divide-zinc-100")
+        each l in logs
+          li
+            details(class="group")
+              summary(class="flex cursor-pointer list-none items-start gap-4 px-4 py-3 hover:bg-zinc-50 [&::-webkit-details-marker]:hidden")
+                != icon('chevron-right', 'mt-0.5 size-4 shrink-0 text-zinc-400 transition-transform group-open:rotate-90')
+                div(class="min-w-0 flex-1")
+                  div(class="flex flex-wrap items-center gap-2")
+                    span(class="badge bg-red-50 font-mono text-red-700 ring-1 ring-red-200")= l.key
+                    if l.error.status
+                      span(class="badge bg-zinc-100 text-zinc-600")= l.error.status
+                    if l.error.name
+                      span(class="text-xs text-zinc-500")= l.error.name
+                  p(class="mt-1 truncate text-sm text-zinc-900")= l.error.message || 'No message'
+                time(class="shrink-0 text-xs text-zinc-500 tabular-nums" datetime=l.date.toISOString() title=l.date.toString())
+                  = `${l.date.toLocaleDateString()} ${l.date.toLocaleTimeString()}`
+              if l.error.stack
+                pre(class="mx-4 mb-4 overflow-x-auto rounded-md bg-zinc-950 p-4 font-mono text-xs leading-relaxed text-zinc-100")= l.error.stack
+              else
+                p(class="mx-4 mb-4 text-sm text-zinc-500") No stack trace available.
+
+block scripts
+  script(type="module" src="/build/errors.js")

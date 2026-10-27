@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  div(class="mx-auto max-w-xl py-16 text-center")
+    p(class="text-sm font-semibold text-brand-600") 404
+    h1(class="mt-2 text-2xl font-semibold tracking-tight") Page not found
+    p(class="mt-2 text-sm text-zinc-500") The page you are looking for does not exist or was removed.
+    a(href="/" class="btn btn-secondary mt-8")
+      != icon('arrow-left')
+      | Back to resources

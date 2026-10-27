@@ -40,9 +40,13 @@ Node version is pinned in `.tool-versions` (asdf). While chupim 0.2.0 is not
 published on npm, the [chupim](https://github.com/baliberdin/chupim) repository
 must be cloned and built next to this one (`../chupim`).
 
+The web UI lives in `views/` (Pug + Tailwind CSS) and `client/` (TypeScript
+bundled with esbuild into `public/build`).
+
 ```shell
 make install       # npm ci
 make test          # typecheck + vitest
+make e2e           # end-to-end tests with Playwright (npx playwright install chromium first)
 make run           # build and start with the examples on http://localhost:3000
 make docker-up     # same, with Docker Compose
 ```
