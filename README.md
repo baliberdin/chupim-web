@@ -132,5 +132,21 @@ make run           # build and start with the examples on http://localhost:3000
 make docker-up     # the same, with Docker Compose
 ```
 
+To release a new version, bump it and push the tag. The
+[Publish](.github/workflows/publish.yml) workflow runs all the tests, builds
+the package and stages it on npm:
+
+```shell
+npm version minor        # or major / patch: updates package.json and creates the tag
+git push --follow-tags
+```
+
+Staged versions are not public until a maintainer approves them with 2FA:
+
+```shell
+npm stage list chupim-web
+npm stage approve <stage-id>
+```
+
 ## License
 [Apache 2.0](LICENSE.txt)
