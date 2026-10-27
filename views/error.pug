@@ -1,6 +1,12 @@
 extends layout
 
 block content
-  .error-box
-    h1= `${message} ${error.status}`
-    pre #{error.stack}
+  div(class="mx-auto max-w-2xl py-16 text-center")
+    p(class="text-sm font-semibold text-red-600")= error.status || 500
+    h1(class="mt-2 text-2xl font-semibold tracking-tight")= message
+    p(class="mt-2 text-sm text-zinc-500") Something went wrong while handling this request.
+    if error.stack
+      pre(class="card mt-8 overflow-x-auto p-4 text-left font-mono text-xs text-zinc-600")= error.stack
+    a(href="/" class="btn btn-secondary mt-8")
+      != icon('arrow-left')
+      | Back to resources

@@ -1,0 +1,7 @@
+services:
+  chupim-web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      CHUPIM_EXAMPLES: "1"

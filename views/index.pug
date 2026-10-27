@@ -1,115 +1,104 @@
 extends layout
-
-block scripts
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js')
-  script(src='/javascripts/main.js')
-
-block navigator
-  include includes/navigator
+include includes/empty-state
 
 block content
-  #alert-modal.modal(tabindex="-1" role="dialog")
-    .modal-dialog(role="document")
-      .modal-content
-        .modal-header
-          h5.modal-title Warning
-          button.close(type="button" data-dismiss="modal" aria-label="Close")
-            span(aria-hidden="true") ×
-        .modal-body
-          
-        .modal-footer
-          button.btn.btn-secondary(type="button" data-dismiss="modal") Cancel
-          a.btn.btn-primary(href='#') Proceed
-  #error-modal.modal(tabindex="-1" role="dialog")
-    .modal-dialog(role="document")
-      .modal-content
-        .modal-header
-          h5.modal-title Error
-          button.close(type="button" data-dismiss="modal" aria-label="Close")
-            span(aria-hidden="true") ×
-        .modal-body
-          
-        .modal-footer
-          button.btn.btn-danger(type="button" data-dismiss="modal") OK
-    
-  .row.full-height
-    .col-2.full-height.right-shadow.scrolly
-      br
-      h3 Stages
-      if Object.keys(chupim.stages.container).length == 0
-        p There is no stages to show. You can create one 
-          a(href='/stage/new') here
-      else
-        br
-        ul#stage-list.list-unstyled
-          for prefix, indx in Object.keys(chupim.stages.container).sort()
-            if prefix != 'join' && prefix != 'register' && prefix != 'registerObject'
-              li
-                //a.text-body(data-toggle='collapse' href=`#package_${indx}` aria-controls=`package_${indx}` role="button" aria-expanded="false")
-                h5.stage-prefix
-                  i.fas.fa-cubes.text-info
-                  | &nbsp;
-                  =prefix
+  div(class="flex flex-wrap items-end justify-between gap-4")
+    div
+      h1(class="text-2xl font-semibold tracking-tight") Resources
+      p(class="mt-1 text-sm text-zinc-500")
+        | Pipelines exposed as HTTP endpoints under 
+        code(class="rounded bg-zinc-100 px-1 py-0.5 text-xs") /api
+        | .
 
-                ul.list-unstyled(id=`package_${indx}`)
-                  for stage in Object.keys(chupim.stages.container[prefix]).sort()
-                    li
-                      a.clickable(href=`/stage/${encodeURIComponent(prefix)}/${encodeURIComponent(stage)}`)
-                        //i.fas.fa-cube.text-danger
-                        img(src='/images/fx2.svg')
-                        | &nbsp;
-                        = `${stage}`
-              li.separator &nbsp;
+  dl(class="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4")
+    - const statItems = [['Resources', stats.resources, 'workflow', null], ['Enabled', stats.enabled, 'circle-check', null], ['Stages', stats.stages, 'square-function', null], ['Logged errors', stats.errors, 'triangle-alert', '/errors']]
+    each s in statItems
+      div(class="card flex items-center gap-4 p-4")
+        span(class="flex size-10 items-center justify-center rounded-lg bg-brand-50 text-brand-600")!= icon(s[2], 'size-5')
+        div
+          dt(class="text-sm text-zinc-500")
+            if s[3]
+              a(href=s[3] class="hover:text-zinc-900 hover:underline")= s[0]
+            else
+              = s[0]
+          dd(class="text-xl font-semibold tabular-nums")= s[1]
 
-    .col.right-shadow
-      br
-      h2 Resources
-      if Object.keys(chupim.components).length == 0
-        p There is no resources to show. Go and create one 
-          a(href='/pipeline/new') here
+  div(class="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]")
+    section(class="card overflow-hidden" aria-labelledby="resources-heading")
+      h2#resources-heading(class="sr-only") Resource list
+      if resources.length == 0
+        +emptyState('workflow', 'No resources yet', 'A resource is a pipeline of stages published as an API endpoint.')
+          if editable
+            a(href="/pipeline/new" class="btn btn-primary")
+              != icon('plus')
+              | Create your first pipeline
       else
-        table.table.table-sm.table-hover.table-borderless
-          thead
-            tr
-              th.text-left State
-              th.text-left Name
-              th.text-left Entrypoint
-              th.text-left RPM
-              th.text-left Time
-              th.text-left Errors
-              th.text-left Actions
-          tbody
-            for sc in Object.keys(chupim.components).sort((a,b) => {if (chupim.components[a].name < chupim.components[b].name)return -1;if (chupim.components[a].name > chupim.components[b].name)return 1;return 0;})
+        div(class="overflow-x-auto")
+          table(class="w-full text-left text-sm")
+            thead(class="border-b border-zinc-200 bg-zinc-50 text-xs font-medium tracking-wide whitespace-nowrap text-zinc-500 uppercase")
               tr
-                td.text-left
-                  if chupim.components[sc].enabled == true
-                    input.btn.btn-xs(type="checkbox" data-toggle="toggle" data-size='mini' data-offstyle='secondary' data-onstyle='success' data-width='35' data-height='22' data-pipeline=sc checked)
-                  else
-                    input.btn.btn-xs(type="checkbox" data-toggle="toggle" data-size='mini' data-offstyle='secondary' data-onstyle='success' data-width='35' data-height='22' data-pipeline=sc)
-                td.text-left= chupim.components[sc].name
-                td.text-left
-                  a(href=`/api/${sc}`)= `/api/${sc}`
-                td.text-left
-                  span= chupim.metrics.getRPM("/api/"+sc)
-                td.text-left
-                  span= `${chupim.metrics.getResponseTime("/api/"+sc)}`
-                td.text-left
-                  if chupim.metrics.getErrorsPercent("/api/"+sc) <= 0
-                    span.badge.badge-secondary= `N/A`
-                  else if chupim.metrics.getErrorsPercent("/api/"+sc) <= 2
-                    span.badge.badge-warning= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
-                  else if chupim.metrics.getErrorsPercent("/api/"+sc) > 2
-                    span.badge.badge-danger= `${chupim.metrics.getErrorsPercent("/api/"+sc)}%`
-                td.text-left 
-                  a(href=`/pipeline/edit/${sc}`)
-                      i.far.fa-edit
-                  |&nbsp;
-                  a.action-remove(href=`#` data-alert=`Delete pipeline ${chupim.components[sc].name}?` data-link=`/pipeline/remove/${sc}`)
-                      i.fas.fa-trash-alt.text-danger
-      
-    
+                th(class="px-4 py-3" scope="col") Enabled
+                th(class="px-4 py-3" scope="col") Resource
+                th(class="px-4 py-3 text-right" scope="col" title="Requests per minute, last 30 minutes") RPM
+                th(class="px-4 py-3 text-right" scope="col" title="Average response time") Avg. time
+                th(class="px-4 py-3 text-right" scope="col" title="Error rate, last 30 minutes") Errors
+                th(class="px-4 py-3" scope="col")
+                  span(class="sr-only") Actions
+            tbody(class="divide-y divide-zinc-100")
+              each r in resources
+                tr(class="hover:bg-zinc-50/60")
+                  td(class="px-4 py-3")
+                    input(type="checkbox" class="switch" data-toggle-resource=r.id checked=r.enabled disabled=!editable aria-label=`Enable ${r.name}`)
+                  td(class="px-4 py-3")
+                    div(class="font-medium text-zinc-900")= r.name
+                    div(class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1")
+                      a(href=`/api/${r.id}` target="_blank" class="group inline-flex items-center gap-1 font-mono text-xs text-brand-700 hover:underline")
+                        = `/api/${r.id}`
+                        != icon('external-link', 'size-3 opacity-0 transition-opacity group-hover:opacity-100')
+                      span(class="flex gap-1")
+                        each m in r.methods
+                          span(class="badge bg-zinc-100 px-1.5 font-mono text-[10px] text-zinc-600")= m
+                  td(class="px-4 py-3 text-right whitespace-nowrap tabular-nums text-zinc-700")= r.rpm
+                  td(class="px-4 py-3 text-right whitespace-nowrap tabular-nums text-zinc-700")= r.responseTime
+                  td(class="px-4 py-3 text-right")
+                    if r.errorsPercent <= 0
+                      span(class="text-zinc-400") —
+                    else if r.errorsPercent <= 2
+                      span(class="badge bg-amber-50 text-amber-700 ring-1 ring-amber-200")= `${r.errorsPercent}%`
+                    else
+                      span(class="badge bg-red-50 text-red-700 ring-1 ring-red-200")= `${r.errorsPercent}%`
+                  td(class="px-4 py-3")
+                    div(class="flex justify-end gap-1")
+                      a(href=`/pipeline/edit/${r.id}` class="btn-icon" title=editable ? 'Edit pipeline' : 'View pipeline' aria-label=`${editable ? 'Edit' : 'View'} ${r.name}`)!= icon(editable ? 'pencil' : 'eye')
+                      if editable
+                        button(type="button" class="btn-icon hover:bg-red-50 hover:text-red-600" title="Delete" aria-label=`Delete ${r.name}` data-delete-resource=r.id data-name=r.name)!= icon('trash-2')
 
-                          
-                          
-  br
-  .row#chart-container
+    aside(class="card" aria-labelledby="stages-heading")
+      div(class="flex items-center justify-between border-b border-zinc-200 px-4 py-3")
+        h2#stages-heading(class="text-sm font-semibold") Stages
+        if editable
+          a(href="/stage/new" class="btn-icon" title="New stage" aria-label="New stage")!= icon('plus')
+      if stageGroups.length == 0
+        +emptyState('square-function', 'No stages yet', 'Stages are the async functions that pipelines are made of.')
+      else
+        div(class="p-3")
+          label(class="relative block")
+            span(class="sr-only") Search stages
+            span(class="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-zinc-400")!= icon('search')
+            input(type="search" class="input pl-8" placeholder="Search stages" data-stage-search)
+        nav(class="max-h-[32rem] overflow-y-auto px-3 pb-3" aria-label="Stages")
+          each g in stageGroups
+            div(class="mt-2 first:mt-0" data-stage-group)
+              div(class="flex items-center gap-2 px-2 py-1 text-xs font-semibold tracking-wide text-zinc-500 uppercase")
+                span(class="size-2 rounded-full" style=`background:${prefixColor(g.prefix)}`)
+                = g.prefix
+              ul
+                each s in g.stages
+                  li(data-stage-item data-search=`${g.prefix} ${s}`.toLowerCase())
+                    a(href=`/stage/${encodeURIComponent(g.prefix)}/${encodeURIComponent(s)}` class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900")
+                      != icon('square-function', 'size-4 text-zinc-400')
+                      = s
+          p(class="hidden px-2 py-6 text-center text-sm text-zinc-500" data-stage-empty) No stages found.
+
+block scripts
+  script(type="module" src="/build/home.js")

@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@source "../views";
+@source "../client";
+
+@theme {
+  --color-brand-50: var(--color-violet-50);
+  --color-brand-100: var(--color-violet-100);
+  --color-brand-200: var(--color-violet-200);
+  --color-brand-500: var(--color-violet-500);
+  --color-brand-600: var(--color-violet-600);
+  --color-brand-700: var(--color-violet-700);
+}
+
+@layer base {
+  html, body {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-zinc-50 text-zinc-900 antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+
+  dialog::backdrop {
+    @apply bg-zinc-950/40 backdrop-blur-[2px];
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-brand-600 text-white shadow-sm hover:bg-brand-700;
+  }
+  .btn-secondary {
+    @apply border border-zinc-300 bg-white text-zinc-700 shadow-sm hover:bg-zinc-50;
+  }
+  .btn-danger {
+    @apply bg-red-600 text-white shadow-sm hover:bg-red-700;
+  }
+  .btn-ghost {
+    @apply text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900;
+  }
+  .btn-icon {
+    @apply inline-flex size-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900;
+  }
+
+  .card {
+    @apply rounded-lg border border-zinc-200 bg-white shadow-xs;
+  }
+
+  .label {
+    @apply mb-1 block text-sm font-medium text-zinc-700;
+  }
+  .hint {
+    @apply mt-1 text-xs text-zinc-500;
+  }
+  .input {
+    @apply block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm shadow-xs placeholder:text-zinc-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none aria-invalid:border-red-500 aria-invalid:ring-red-500/20;
+  }
+  .field-error {
+    @apply mt-1 hidden text-xs text-red-600;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+
+  .kbd {
+    @apply rounded border border-zinc-300 bg-zinc-50 px-1.5 py-0.5 font-mono text-[11px] text-zinc-600 shadow-[0_1px_0_var(--color-zinc-300)];
+  }
+
+  /* Toggle switch built on a checkbox: input.switch(type="checkbox") */
+  .switch {
+    @apply relative h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-zinc-300 transition-colors checked:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .switch::before {
+    @apply absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow transition-transform content-[''];
+  }
+  .switch:checked::before {
+    @apply translate-x-4;
+  }
+}
