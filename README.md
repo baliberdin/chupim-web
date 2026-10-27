@@ -117,9 +117,7 @@ Chupim Web is configured with environment variables:
 > `CHUPIM_ENV=production` and register stages and pipelines in code.
 
 ## Development
-The Node.js version is pinned in `.tool-versions` (asdf). Until chupim 0.2.0 is
-published on npm, the [chupim](https://github.com/baliberdin/chupim) repository
-must be cloned and built next to this one, in `../chupim`.
+The Node.js version is pinned in `.tool-versions` (asdf).
 
 The server is in `src/` (TypeScript). The web interface is in `views/` (Pug and
 Tailwind CSS) and in `client/` (TypeScript, bundled with esbuild into

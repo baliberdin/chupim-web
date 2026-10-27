@@ -21,7 +21,7 @@ run: build
 	CHUPIM_EXAMPLES=1 npm start
 
 docker-build:
-	docker build --build-context chupim=../chupim -t chupim-web .
+	docker build -t chupim-web .
 
 docker-up:
 	docker compose up --build
