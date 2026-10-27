@@ -30,6 +30,24 @@ export CHUPIM_EXAMPLES=1
 node index.js
 ```
 
+## Examples
+With `CHUPIM_EXAMPLES=1`, Chupim starts with two example pipelines:
+
+- **Hello World** (`/api/v1/helloworld`): the simplest pipeline, two serial stages.
+- **Weather Dashboard** (`/api/v1/weather?city=Lisbon`): a backend for frontend
+  that composes three [Open-Meteo](https://open-meteo.com) APIs (no API key needed).
+  It finds the city, fetches the forecast and the air quality in parallel and
+  builds a compact report with some advice. The air quality stage has a circuit
+  breaker with a fallback, so the report still works when that service is slow
+  or down.
+
+```
+readCity → findCity → ┬ fetchForecast   ┬→ buildReport
+                      └ fetchAirQuality ┘
+```
+
+Open them on the web UI to see and edit their stages.
+
 ## Access to Server 
 [http://localhost:3000](http://localhost:3000)
 
