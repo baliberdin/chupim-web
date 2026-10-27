@@ -7,7 +7,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "chupim": "^0.1.5",
+    "chupim": "file:../chupim",
     "compression": "^1.7.3",
     "debug": "~2.6.9",
     "express": "^4.16.4",

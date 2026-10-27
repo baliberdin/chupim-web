@@ -154,9 +154,8 @@ router.post('/stage', function(req, res, next) {
 router.get('/stage/:prefix/*', function(req, res, next) {
 	var prefix = req.params.prefix;
 	var stageName = req.params['0'];
-	var stageFullName = `${prefix}.${stageName}`;
 
-	var stage = chupim.getStage(stageFullName);
+	var stage = chupim.getStageByPackage(prefix, stageName);
 
 	if(stage){
 		res.render('stages/new', { 
