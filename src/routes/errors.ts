@@ -34,7 +34,8 @@ router.get('/', function(req, res, next) {
     logs = chupim.errors.errorsLog;
   }
 
-  logs = logs.sort((a,b) => {
+  // Sorts a copy: the error log itself must stay ordered from oldest to newest
+  logs = [...logs].sort((a,b) => {
     if(a.date < b.date){
       return 1;
     }
