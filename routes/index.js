@@ -55,16 +55,17 @@ router.get('/pipeline/new', function(req, res, next) {
 
 /* Create new chupim entry for a pipeline */
 router.post('/pipeline', function(req, res, next) {
-	var path = req.body.path;
-	var name = req.body.name;
-	var methods = req.body.methods;
-	var enabled = (req.body.enabled == 'true');
+	var body = req.body || {};
+	var path = body.path;
+	var name = body.name;
+	var methods = body.methods;
+	var enabled = (body.enabled == 'true');
 	var stages, elements;
 
 	// Missing or invalid fields are handled below by redirecting back to the editor
 	try {
-		stages = JSON.parse(req.body.stages);
-		elements = JSON.parse(req.body.elements);
+		stages = JSON.parse(body.stages);
+		elements = JSON.parse(body.elements);
 	} catch(e) {}
 
   if(stages == undefined || path == undefined || name == undefined || elements == undefined){
@@ -77,8 +78,8 @@ router.post('/pipeline', function(req, res, next) {
 
 
 /* Edit a pipeline */
-router.get('/pipeline/edit/*', function(req, res, next) {
-	var componentName = req.params['0'];
+router.get('/pipeline/edit/*splat', function(req, res, next) {
+	var componentName = req.params.splat.join('/');
 	var component = chupim.getPipelineComponent(componentName);
 	
 	if( component != undefined ){
@@ -93,8 +94,8 @@ router.get('/pipeline/edit/*', function(req, res, next) {
 });
 
 /* Edit a pipeline */
-router.get('/pipeline/update/*', function(req, res, next) {
-	var componentName = req.params['0'];
+router.get('/pipeline/update/*splat', function(req, res, next) {
+	var componentName = req.params.splat.join('/');
 	var component = chupim.getPipelineComponent(componentName);
 	
 	if( component != undefined ){
@@ -118,8 +119,8 @@ router.get('/pipeline/update/*', function(req, res, next) {
 });
 
 /* Edit a pipeline */
-router.get('/pipeline/remove/*', function(req, res, next) {
-	var componentName = req.params['0'];
+router.get('/pipeline/remove/*splat', function(req, res, next) {
+	var componentName = req.params.splat.join('/');
 	chupim.removePipelineComponent(componentName);
 	res.redirect("/");
 });
@@ -136,19 +137,20 @@ router.get('/stage/new', function(req, res, next) {
 
 /* Create a new Stage from source */
 router.post('/stage', function(req, res, next) {
+	var body = req.body || {};
 	let stage = {};
 	stage.circuitbreaker = {};
-	stage.circuitbreaker.enabled = req.body['circuitBreaker.enabled'];
-	stage.circuitbreaker.action = req.body['circuitBreaker.action'];
-	stage.circuitbreaker.fn = req.body['circuitBreaker.fn'];
-	stage.circuitbreaker.timeout = req.body['circuitBreaker.timeout'];
-	stage.name = req.body.name;
-	stage.prefix = req.body.prefix;
+	stage.circuitbreaker.enabled = body['circuitBreaker.enabled'];
+	stage.circuitbreaker.action = body['circuitBreaker.action'];
+	stage.circuitbreaker.fn = body['circuitBreaker.fn'];
+	stage.circuitbreaker.timeout = body['circuitBreaker.timeout'];
+	stage.name = body.name;
+	stage.prefix = body.prefix;
 
 	if(stage.circuitbreaker.enabled == 'true')stage.circuitbreaker.enabled = true;
 
 	// WARNING: Evaluation of an user submitted source. Only for development purpose.
-	stage.fn = eval(req.body.source);
+	stage.fn = eval(body.source);
 	chupim.registerStage(stage);
 
 	res.redirect("/");
@@ -156,9 +158,9 @@ router.post('/stage', function(req, res, next) {
 
 
 /* Edit Stage source code */
-router.get('/stage/:prefix/*', function(req, res, next) {
+router.get('/stage/:prefix/*splat', function(req, res, next) {
 	var prefix = req.params.prefix;
-	var stageName = req.params['0'];
+	var stageName = req.params.splat.join('/');
 
 	var stage = chupim.getStageByPackage(prefix, stageName);
 

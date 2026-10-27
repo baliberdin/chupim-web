@@ -42,6 +42,12 @@ describe('pipelines', () => {
     expect(res.headers.location).toBe('/pipeline/new');
   });
 
+  test('POST /pipeline without body redirects back to editor', async () => {
+    const res = await request(app).post('/pipeline');
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe('/pipeline/new');
+  });
+
   test('POST /pipeline with invalid stages redirects back to editor', async () => {
     const res = await request(app).post('/pipeline').type('form').send({
       path: 'v1/invalid', name: 'Invalid', stages: 'not json',

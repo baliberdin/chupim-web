@@ -25,27 +25,27 @@ router.get('/', function(req, res, next) {
 });
 
 /* Execute pipeline */
-router.get('/*', function(req, res, next) {
+router.get('/*splat', function(req, res, next) {
 	return controller.doRequest(req,res,next);
 });
 
-router.post('/*', function(req, res, next) {
+router.post('/*splat', function(req, res, next) {
 	return controller.doRequest(req,res,next);
 });
 
-router.put('/*', function(req, res, next) {
+router.put('/*splat', function(req, res, next) {
 	return controller.doRequest(req,res,next);
 });
 
-router.head('/*', function(req, res, next) {
+router.head('/*splat', function(req, res, next) {
 	return controller.doRequest(req,res,next);
 });
 
-router.delete('/*', function(req, res, next) {
+router.delete('/*splat', function(req, res, next) {
 	return controller.doRequest(req,res,next);
 });
 
-router.options('/*', function(req, res, next) {
+router.options('/*splat', function(req, res, next) {
 	return controller.doRequest(req,res,next);
 });
 

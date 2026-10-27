@@ -31,7 +31,7 @@ module.exports = {
     //context._chupim_.params.debug = true;
 
     context._chupim_.requestedComponent = chupim.getPipelineComponent(
-      req.params["0"]
+      req.params.splat.join("/")
     );
 
     if (context._chupim_.method == "POST") {
